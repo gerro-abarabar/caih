@@ -25,7 +25,7 @@ def get_exam_from_ai():
     },
     ]
     messages = client.chat('gpt-oss:120b-cloud', messages=messages, stream=False)
-    message=messages.message.content.strip("`") # TODO: json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+    message=messages.message.content.strip("`")[3:] # TODO: json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
     print(message)
     return json.loads(message)
 

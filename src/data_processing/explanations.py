@@ -1,0 +1,148 @@
+# This file creates explanations for the json that hadn't got a explanation
+from concurrent.futures import ThreadPoolExecutor
+import json
+import os
+import struct
+import time
+from random import randint
+from ollama import Client
+from tkinter import filedialog, Tk
+
+
+
+def get_file_from_user():
+    root = Tk()
+    root.withdraw()
+    file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
+    if not file_path:
+        raise ValueError("User must select a file")
+    return file_path
+
+def load_exam(file_path="assets"):
+    file_path = os.path.join(file_path)
+    
+    with open(os.path.join(file_path), "r") as f:
+        data = json.load(f)
+    return data
+
+def ask_llm(question):
+    client=Client()
+    response=""
+    max_retries = 5
+    for _ in range(max_retries):
+        try:
+            response = client.chat(model_used, 
+                messages=[
+                    {  
+                        "role": "user",
+                            "content": "I got a question and answer in this set. Give me an explanation on how to get the answer. "+json.dumps(question)
+                        }
+                    ]
+                    )
+            content = response.message.content.strip("`")
+            if content: return content
+
+        except Exception as e:
+            print(f"Error: {e}. Retrying...")
+            time.sleep(randint(5,10))
+        return "No explanation available after multiple attempts."
+
+import socket
+
+host = "0.0.0.0"
+port = 45612
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+def get_full_data(conn):
+    # Receiver side
+    header = conn.recv(4)
+    if header:
+        msg_len = int.from_bytes(header, byteorder='big') # Simplified example
+        chunks = []
+        bytes_recd = 0
+        while bytes_recd < msg_len:
+            chunk = conn.recv(min(msg_len - bytes_recd, 1024))
+            if not chunk: break 
+            chunks.append(chunk)
+            bytes_recd += len(chunk)
+        full_msg = b''.join(chunks).decode()
+        return full_msg 
+
+def wait_until_complete(batch=10):
+    
+    data=[]
+    while (len(data) < batch):
+        conn, address = server_socket.accept()
+        
+        new_data = get_full_data(conn)
+        # data must be a json
+        data.append(json.loads(new_data)) 
+        
+        # Send an acknowledgment back to the client
+        message = "Message Received"
+        conn.send(message.encode())
+        conn.close()
+    return data
+
+def handle_data_question(question):
+    explanation = ask_llm(question)
+    question["explanation"] = explanation
+    return question
+
+def process_question(question, model):
+    """The logic previously in thread_func, now standalone"""
+    try:
+        # 1. Get LLM result
+        updated_q = handle_data_question(question, model)
+        payload = json.dumps(updated_q).encode()
+        header = struct.pack('>I', len(payload))
+        
+        # 2. Send to local 'collector' server
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.connect(('127.0.0.1', 45612))
+            s.sendall(header + payload)
+            # Short timeout for the ack
+            s.settimeout(5.0)
+            ack = s.recv(1024).decode()
+            return True
+    except Exception as e:
+        print(f"Failed to process/send question: {e}")
+        return False
+
+if __name__ == "__main__":
+    exam = load_exam(get_file_from_user())
+    choice = 0
+    while choice not in [1, 2, 3]:
+        choice = int(input("""What type of exam is it?
+                1. Reasoning (Math, Logic, etc.)
+                2. Language Proficiency (English, etc.)
+                3. General Knowledge (History, Science, etc.)
+                """))
+        if choice not in [1, 2, 3]:
+            print("Invalid choice. Please try again.")
+
+    model_used=['deepseek-v3.2:cloud', 'ministral-3:14b-cloud', 'qwen3.5:397b-cloud'][choice-1]
+    print(model_used)
+    
+    batch_size = 10
+    final_data=[]
+    server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    server_socket.bind((host, port))
+    server_socket.listen(batch_size)
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        # This handles the batching correctly even for odd numbers
+        for i in range(0, len(exam), batch_size):
+            batch = exam[i : i + batch_size]
+            
+            # Start LLM tasks
+            for q in batch:
+                executor.submit(process_question, q, model_used)
+            
+            # Collect results for this batch
+            final_data.extend(wait_until_complete(batch=len(batch)))
+        print(final_data)
+    server_socket.close()
+    with open("final_data.json", "w") as f:
+        json.dump(final_data, f, indent=4)
+
+
