@@ -1,46 +1,88 @@
-# This is where they can grab data for prompting.
-
-import json,os
+import json
+import os
+import re
 from random import choice
 from ollama import Client
 
 def load_exam(file_path="assets"):
-    file_path = os.path.join(file_path)
-    while True:
-        file = choice(os.listdir(file_path))
-        if file.endswith(".json"):
-            break
+    # Ensure directory exists to avoid infinite loops
+    if not os.path.exists(file_path):
+        os.makedirs(file_path)
     
-    with open(os.path.join(file_path, file), "r") as f:
-        data = json.load(f)
-    return data
+    files = [f for f in os.listdir(file_path) if f.endswith(".json")]
+    if not files:
+        raise FileNotFoundError(f"No .json files found in {file_path}")
+    
+    file = choice(files)
+    with open(os.path.join(file_path, file), "r", encoding="utf-8") as f:
+        return json.load(f)
 
 def get_exam_from_ai():
     client = Client()
-    exam = load_exam()
+    exam_data = load_exam()
+    
+    # We only need a slice for context
+    example_json = json.dumps(exam_data[0:4])
+
     messages = [
-    {
-        'role': 'user',
-        'content': 'Create 5 questions just like the following text, also include an explanation why a wrong answer is wrong, and likewise: ' + str(exam[0:4]),
-    },
+        {
+            'role': 'system', 
+            'content': (
+                "You are a specialized JSON generator. Output ONLY a raw JSON array. "
+                "No markdown blocks, no preamble, and no explanation. "
+                "Ensure all newlines inside strings are escaped as '\\n'."
+            )
+        },
+        {
+            'role': 'user',
+            'content': f"Create 5 new questions following this schema: {example_json}. Use 0-3 for correct_answer index."
+        },
     ]
-    messages = client.chat('gpt-oss:120b-cloud', messages=messages, stream=False)
-    message=messages.message.content.strip("`")[3:] # TODO: json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
-    print(message)
-    return json.loads(message)
+
+    # Using Gemini 3 Flash for high reliability
+    response = client.chat('gemini-3-flash-preview:latest', messages=messages, stream=False)
+    raw_content = response.message.content 
+
+    try:
+        # 1. Strip Markdown code blocks if the model included them
+        clean_content = re.sub(r'```json|```', '', raw_content).strip()
+        
+        # 2. Extract the array using a non-greedy match to avoid "extra data" errors
+        match = re.search(r'\[.*\]', clean_content, re.DOTALL)
+        
+        if match:
+            json_str = match.group(0)
+            
+            # 3. Clean common invisible character culprits
+            json_str = json_str.replace('\xa0', ' ')  # Non-breaking spaces
+            json_str = json_str.replace('\t', ' ')    # Literal tabs
+            
+            return json.loads(json_str)
+        else:
+            raise ValueError("No JSON array found in the response.")
+            
+    except json.JSONDecodeError as e:
+        print(f"CRITICAL: JSON Decode Failed at character {e.pos}")
+        print(f"Context: {raw_content[max(0, e.pos-40):e.pos+40]}")
+        raise e
 
 def explain_exam(exam):
     client = Client()
     messages = [
-    {
-        'role': 'user',
-        'content': 'Explain the following exam, ignore the json format, just focus on giving the best explanation: ' + str(exam),
-    },
+        {
+            'role': 'user',
+            'content': f'Provide a clear, educational explanation for these questions. Focus on the logic behind the correct answers: {json.dumps(exam)}',
+        },
     ]
-    messages = client.chat('gpt-oss:120b-cloud', messages=messages, stream=False)
-    return messages.message.content.strip("`")
-
-
+    # OSS is fine for prose/explanations
+    response = client.chat('gpt-oss:120b-cloud', messages=messages, stream=False)
+    return response.message.content.strip()
 
 if __name__ == "__main__":
-    print(load_exam()[0])
+    # Test the AI generation
+    try:
+        new_exam = get_exam_from_ai()
+        print(f"Successfully generated {len(new_exam)} questions.")
+        print(json.dumps(new_exam[0], indent=2))
+    except Exception as e:
+        print(f"Error: {e}")

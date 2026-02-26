@@ -18,7 +18,8 @@ print("In main page")
 st.title("Welcome to the Exam Generator!")
 st.write("Click the button below to generate a new exam.")
 if st.button("Generate Exam"):
-    
+    st.session_state.question_type=0
+    st.session_state.score={}
     st.switch_page("pages/exam.py")
     print("Now going to exam page")
 
