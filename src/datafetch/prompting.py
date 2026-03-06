@@ -17,12 +17,12 @@ def load_exam(file_path="assets"):
     with open(os.path.join(file_path, file), "r", encoding="utf-8") as f:
         return json.load(f)
 
-def get_exam_from_ai():
+def get_exam_from_ai(questions):
     client = Client()
     exam_data = load_exam()
     
     # We only need a slice for context
-    example_json = json.dumps(exam_data[0:4])
+    example_json = json.dumps(exam_data[0:questions-1], indent=2)
 
     messages = [
         {
@@ -35,36 +35,38 @@ def get_exam_from_ai():
         },
         {
             'role': 'user',
-            'content': f"Create 5 new questions following this schema: {example_json}. Use 0-3 for correct_answer index."
+            'content': f"Create {questions} new questions following this schema: {example_json}. Use 0-3 for correct_answer index. Start the id from 1."
         },
     ]
 
     # Using Gemini 3 Flash for high reliability
     response = client.chat('gemini-3-flash-preview:latest', messages=messages, stream=False)
     raw_content = response.message.content 
-
-    try:
-        # 1. Strip Markdown code blocks if the model included them
-        clean_content = re.sub(r'```json|```', '', raw_content).strip()
-        
-        # 2. Extract the array using a non-greedy match to avoid "extra data" errors
-        match = re.search(r'\[.*\]', clean_content, re.DOTALL)
-        
-        if match:
-            json_str = match.group(0)
+    
+    while True:
+        try:
+            # 1. Strip Markdown code blocks if the model included them
+            clean_content = re.sub(r'```json|```', '', raw_content).strip()
             
-            # 3. Clean common invisible character culprits
-            json_str = json_str.replace('\xa0', ' ')  # Non-breaking spaces
-            json_str = json_str.replace('\t', ' ')    # Literal tabs
+            # 2. Extract the array using a non-greedy match to avoid "extra data" errors
+            match = re.search(r'\[.*\]', clean_content, re.DOTALL)
             
-            return json.loads(json_str)
-        else:
-            raise ValueError("No JSON array found in the response.")
-            
-    except json.JSONDecodeError as e:
-        print(f"CRITICAL: JSON Decode Failed at character {e.pos}")
-        print(f"Context: {raw_content[max(0, e.pos-40):e.pos+40]}")
-        raise e
+            if match:
+                json_str = match.group(0)
+                
+                # 3. Clean common invisible character culprits
+                json_str = json_str.replace('\xa0', ' ')  # Non-breaking spaces
+                json_str = json_str.replace('\t', ' ')    # Literal tabs
+                
+                return json.loads(json_str)
+            else:
+                raise ValueError("No JSON array found in the response.")
+                
+        except json.JSONDecodeError as e:
+            print(f"CRITICAL: JSON Decode Failed at character {e.pos}")
+            print(f"Context: {raw_content[max(0, e.pos-40):e.pos+40]}")
+            print("redoing everything...")
+            raise e
 
 def explain_exam(exam):
     client = Client()

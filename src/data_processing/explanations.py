@@ -25,6 +25,28 @@ def load_exam(file_path="assets"):
         data = json.load(f)
     return data
 
+
+llm_message=[
+    # Math
+    "You are an expert STEM Tutor. Analyze this entrance exam question:\n{question}\n\n"
+           "Provide a structured derivation using these steps:\n"
+           "1. FUNDAMENTAL PRINCIPLE: Identify the core theorem or law required.\n"
+           "2. STEP-BY-STEP DERIVATION: Show the logical flow from the question to the answer.\n"
+           "3. THE 'EXAM HACK': If there is a dimensional analysis trick, estimation technique, or shortcut to eliminate options quickly, explain it.",
+    # Linguistics
+    "You are a Verbal Reasoning expert. Analyze this question and its context:\n{question}\n\n"
+           "Provide a linguistic breakdown:\n"
+           "1. KEYWORD ANALYSIS: Identify the specific words in the prompt that dictate the correct answer.\n"
+           "2. LOGICAL JUSTIFICATION: Explain why the correct answer is the most semantically sound.\n"
+           "3. DISTRACTOR DECONSTRUCTION: Briefly explain why the most 'tempting' wrong options are incorrect (e.g., too broad, too narrow, or out of context).",
+    # General Knowledge
+    "You are a General Knowledge expert. Review this exam question:\n{question}\n\n" 
+           "Explain the factual basis for the answer:\n"
+           "1. HISTORICAL/SCIENTIFIC CONTEXT: Provide the background facts that make this answer true.\n"
+           "2. CONCEPTUAL MAPPING: How does this specific fact connect to the broader subject matter?\n"
+           "3. MEMORY ANCHOR: Give a mnemonic or a quick 'rule of thumb' to help remember this fact for future questions."
+]
+
 def ask_llm(question):
     client=Client()
     response=""
@@ -35,7 +57,7 @@ def ask_llm(question):
                 messages=[
                     {  
                         "role": "user",
-                            "content": "I got a question and answer in this set. Give me an explanation on how to get the answer. "+json.dumps(question)
+                            "content": llm_message[choice].format(question=json.dumps(question, indent=4))
                         }
                     ]
                     )
@@ -89,17 +111,17 @@ def handle_data_question(question):
     question["explanation"] = explanation
     return question
 
-def process_question(question, model):
+def process_question(model, question):
     """The logic previously in thread_func, now standalone"""
     try:
         # 1. Get LLM result
-        updated_q = handle_data_question(question, model)
-        payload = json.dumps(updated_q).encode()
+        updated_q = handle_data_question(question)
+        payload = json.dumps(updated_q).encode("utf-8")
         header = struct.pack('>I', len(payload))
         
         # 2. Send to local 'collector' server
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect(('127.0.0.1', 45612))
+            s.connect(("127.0.0.1", port))
             s.sendall(header + payload)
             # Short timeout for the ack
             s.settimeout(5.0)
@@ -108,16 +130,15 @@ def process_question(question, model):
     except Exception as e:
         print(f"Failed to process/send question: {e}")
         return False
-
+choice = 0
 if __name__ == "__main__":
     exam = load_exam(get_file_from_user())
-    choice = 0
+    
     while choice not in [1, 2, 3]:
-        choice = int(input("""What type of exam is it?
-                1. Reasoning (Math, Logic, etc.)
-                2. Language Proficiency (English, etc.)
-                3. General Knowledge (History, Science, etc.)
-                """))
+        choice = int(input("What type of exam is it?\n"
+                "\t1. Reasoning (Math, Logic, etc.)\n"
+                "\t2. Language Proficiency (English, etc.)\n"
+                "\t3. General Knowledge (History, Science, etc.)"))
         if choice not in [1, 2, 3]:
             print("Invalid choice. Please try again.")
 
@@ -136,11 +157,11 @@ if __name__ == "__main__":
             
             # Start LLM tasks
             for q in batch:
-                executor.submit(process_question, q, model_used)
+                executor.submit(process_question, model_used, q)
             
             # Collect results for this batch
             final_data.extend(wait_until_complete(batch=len(batch)))
-        print(final_data)
+            print(final_data)
     server_socket.close()
     with open("final_data.json", "w") as f:
         json.dump(final_data, f, indent=4)
