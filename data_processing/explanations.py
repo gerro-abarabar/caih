@@ -84,6 +84,7 @@ def get_full_data(conn):
         bytes_recd = 0
         while bytes_recd < msg_len:
             chunk = conn.recv(min(msg_len - bytes_recd, 1024))
+            
             if not chunk: break 
             chunks.append(chunk)
             bytes_recd += len(chunk)
@@ -107,15 +108,21 @@ def wait_until_complete(batch=10):
     return data
 
 def handle_data_question(question):
-    explanation = ask_llm(question)
-    question["explanation"] = explanation
+    explanation=""
+    while not explanation or explanation.strip() == "No explanation available after multiple attempts.":
+        explanation = ask_llm(question)
+        question["explanation"] = explanation
     return question
 
 def process_question(model, question):
     """The logic previously in thread_func, now standalone"""
     try:
-        # 1. Get LLM result
-        updated_q = handle_data_question(question)
+        # This allows multiple retries to get an explanation if the LLM fails, without crashing the whole process
+        if not question.get("explanation") or question["explanation"].strip() == "No explanation available after multiple attempts.":
+            # 1. Get LLM result
+            updated_q = handle_data_question(question)
+        else:
+            updated_q = question
         payload = json.dumps(updated_q).encode("utf-8")
         header = struct.pack('>I', len(payload))
         
@@ -163,6 +170,7 @@ if __name__ == "__main__":
             final_data.extend(wait_until_complete(batch=len(batch)))
             print(final_data)
     server_socket.close()
+    final_data.sort(key=lambda x: x['id'])
     with open("final_data.json", "w") as f:
         json.dump(final_data, f, indent=4)
 

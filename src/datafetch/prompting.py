@@ -4,22 +4,23 @@ import re
 from random import choice
 from ollama import Client
 
-def load_exam(file_path="assets"):
+def load_exam(file_path="assets",subject=""):
+    path=os.path.join(file_path, subject.lower())
     # Ensure directory exists to avoid infinite loops
-    if not os.path.exists(file_path):
-        os.makedirs(file_path)
-    
-    files = [f for f in os.listdir(file_path) if f.endswith(".json")]
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+    files = [f for f in os.listdir(path) if f.endswith(".json")]
     if not files:
-        raise FileNotFoundError(f"No .json files found in {file_path}")
+        raise FileNotFoundError(f"No .json files found in {path}")
     
     file = choice(files)
-    with open(os.path.join(file_path, file), "r", encoding="utf-8") as f:
+    with open(os.path.join(path, file), "r", encoding="utf-8") as f:
         return json.load(f)
 
-def get_exam_from_ai(questions):
+def get_exam_from_ai(questions, subject):
     client = Client()
-    exam_data = load_exam()
+    exam_data = load_exam(subject=subject)
     
     # We only need a slice for context
     example_json = json.dumps(exam_data[0:questions-1], indent=2)

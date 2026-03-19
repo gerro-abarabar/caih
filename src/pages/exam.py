@@ -7,7 +7,7 @@ st.title("Exam Page")
 @st.cache_data
 def get_exam():
     print(st.session_state.data.fetch_exam)
-    exam = st.session_state.data.fetch_exam(st.session_state.question_amount)
+    exam = st.session_state.data.fetch_exam(st.session_state.question_amount,st.session_state.subject)
     sorted= {question["instruction"]:[] for question in exam} # Sorts by instruction of every item
     
     for question in exam:
@@ -67,7 +67,7 @@ def render_questions():
             button_choice = clean_choice(button_choice)
             selected_button_key=f"button_{num}{button_choice[0].lower()}_value"
             print(button_choice)
-            
+            st.session_state.choices[num]=button_choice[0].lower() # Store the user's choice for later reference in explanations page            
             correct_answer=0
             for question in exam[exam_dict_key]:
                 if question["id"]==num:
@@ -87,7 +87,7 @@ def render_questions():
             
         
         
-        for choice in question["choices"]:
+        for i, choice in enumerate(question["choices"]):
             choice=clean_choice(choice)
             st.session_state[f"button_{question['id']}{choice[0].lower()}_value"] = st.session_state.get(f"button_{question['id']}{choice[0].lower()}_value", 0) # Initialize state for each button
             # print(f"Initialized button_{question['id']}{choice[0].lower()}_value to {st.session_state[f'button_{question['id']}{choice[0].lower()}_value']}")
@@ -95,7 +95,7 @@ def render_questions():
             st.button(
                 choice, 
                 on_click=on_choice_click, 
-                key=f"button_{question['id']}{choice[0].lower()}", 
+                key=f"button_{question['id']}{"abcd"[i]}", 
                 args=(choice,question["id"]), # TODO: fix the problem with correct answers being because it is only considering the last question
                 disabled=value!=0, # Default value is 0, if the value changes (the user changed it, refer to on_choice_click) then it will disable.
                 )

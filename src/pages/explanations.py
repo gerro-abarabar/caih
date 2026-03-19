@@ -9,6 +9,8 @@ st.write("# Completed Exam")
 # Score
 score = st.session_state.score
 
+choices = st.session_state.choices
+
 final_score=0
 unanswered_questions={}
 wrong_questions={}
@@ -19,6 +21,7 @@ total_questions = len(flattened_exam)
 CORRECT = 1
 print("score ",score)
 for num, result in score.items():
+    num=int(num)
     print(num)
     if result == CORRECT: # Correct answer
         final_score += 1
@@ -37,11 +40,11 @@ elif question_type == "Wrong":
     questions_to_review = wrong_questions.items()
 elif question_type == "Unanswered":
     questions_to_review = unanswered_questions.items()
-
+print("choices",choices)
 for num, question in questions_to_review:
     print(num)
     # print(question)
     st.markdown(f"### Question {num}: {question['question']}", unsafe_allow_html=True)
-    st.markdown(f"**Your answer:** {score[num]}", unsafe_allow_html=True)
+    st.markdown(f"**Your answer:** {question['choices']["abcd".index(choices[str(num)])]}", unsafe_allow_html=True)
     st.markdown(f"**Correct answer:** {question['choices'][question['correct_answer']]}", unsafe_allow_html=True)
     st.markdown(f"**Explanation:** \n{question['explanation']}", unsafe_allow_html=True)
