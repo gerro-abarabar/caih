@@ -57,7 +57,7 @@ def ask_llm(question):
                 messages=[
                     {  
                         "role": "user",
-                            "content": llm_message[choice].format(question=json.dumps(question, indent=4))
+                            "content": llm_message[choice-1].format(question=json.dumps(question, indent=4))
                         }
                     ]
                     )
@@ -170,7 +170,7 @@ if __name__ == "__main__":
             final_data.extend(wait_until_complete(batch=len(batch)))
             print(final_data)
     server_socket.close()
-    final_data.sort(key=lambda x: x['id'])
+    final_data.sort(key=lambda x: int(x['id']))
     with open("final_data.json", "w") as f:
         json.dump(final_data, f, indent=4)
 
