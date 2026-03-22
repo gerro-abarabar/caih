@@ -12,7 +12,7 @@ This tool is made specifically for Philippine Colleges (e.g. UP, UST, DLSU) Admi
 3. Install the required libraries by doing `pip install -r requirements.txt` or `pip3 install -r requirements.txt` if you're in Mac or Linux
 4. Install [Ollama](https://ollama.com/).
 5. Pull the cloud models by doing `ollama pull gemini-3-flash-preview:latest`
-6. Run the program by doing `streamlit src/main.py`.
+6. Run the program by doing `streamlit run src/main.py`.
 7. Enjoy studying!
 
 
