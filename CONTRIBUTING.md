@@ -99,7 +99,7 @@ Put your source, `.pdf`, `.json`, `.md` in your issue, then click `Create`
 Wait for your reviewer to be accepted into the project.
 
 Refer to the video to do it:
-<video src="assets/new_reviewer.webm" controls="controls" style="max-width: 100%;">
+<video src="assets/add_reviewer.mp4" controls="controls" style="max-width: 100%;">
   Your browser does not support the video tag.
 </video>
 
