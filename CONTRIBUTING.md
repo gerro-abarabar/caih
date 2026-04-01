@@ -6,7 +6,7 @@ To improve this project as a student, I recommend you to **contribute to the rev
 
 ## Requirements
 
-You need to install 2 applications in your system. 
+You need to install **2 applications in your system.**
 
 ### Python and Ollama
 
@@ -21,7 +21,10 @@ Download the source code by clicking: `Code > Download Zip` or `git clone https:
 #### Mac and Linux
 Setup your Python environment by running `python -m venv .venv` and **activate** it by doing `source .venv/bin/activate` (`source .venv/bin/activate` for Mac and Linux)
 
-#### Install Libraries
+#### Use Datalabs API Key
+Rename the `.env.example` to `.env` and change the API Key from [datalabs.to](https://www.datalab.to). You can find it by going `Convert > API Key > Copy`
+
+#### Install Libraries and Models
 
 Install the required libraries by doing `pip install -r requirements.txt` or `pip3 install -r requirements.txt` if you're in Mac or Linux.
 
