@@ -45,6 +45,6 @@ for num, question in questions_to_review:
     print(num)
     # print(question)
     st.markdown(f"### Question {num}: {question['question']}", unsafe_allow_html=True)
-    st.markdown(f"**Your answer:** {question['choices']["abcd".index(choices[str(num)])]}", unsafe_allow_html=True)
+    st.markdown(f"**Your answer:** {question['choices']["abcd".index(choices[num])]}", unsafe_allow_html=True)
     st.markdown(f"**Correct answer:** {question['choices'][question['correct_answer']]}", unsafe_allow_html=True)
     st.markdown(f"**Explanation:** \n{question['explanation']}", unsafe_allow_html=True)

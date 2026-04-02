@@ -75,11 +75,11 @@ def render_questions():
             
             if button_choice[0].lower() == "abcd"[correct_answer]:
                 print("Correct!")
-                st.session_state.score[num]=CORRECT
+                st.session_state.score[str(num)]=CORRECT
                 st.session_state[selected_button_key] = CORRECT
             else:
                 print("Wrong.")
-                st.session_state.score[num]=WRONG
+                st.session_state.score[str(num)]=WRONG
                 st.session_state[selected_button_key] = WRONG
             print(question["correct_answer"],num)
 
