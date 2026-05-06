@@ -6,6 +6,7 @@ This project needs to be able to do the following:
 - [ ] (If possible) scoring system
 - [ ] Self-evaluating phase
   - It can evaluate your weakness and tell what you're missing out on
+  - May use an embedding system to find lessons that are similar to your weaknesses
 - [ ] Home page for giving help (Mathdash.com-style)
 - [ ] Recheck questions
 - [x] Ask for a better explanation

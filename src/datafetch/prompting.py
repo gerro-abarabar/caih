@@ -247,6 +247,21 @@ def remake_explanation(question: Question):
     return response.message.content
 
 
+def chat_with_ai(messages: List[dict]):
+    client = Client()
+    while True:
+        try:
+            response = client.chat(
+                "gemma4:31b-cloud",
+                messages=messages,
+                stream=True,
+            )
+            return response
+        except Exception as e:
+            print(f"Error in AI chat: {e}. Retrying...")
+            sleep(2)  # To avoid rate limits
+
+
 if __name__ == "__main__":
     # Test the AI generation
     try:

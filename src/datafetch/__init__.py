@@ -10,6 +10,8 @@ from .prompting import explain_exam, get_exam_from_ai, remake_explanation
 
 
 class DataFetcher:
+    messages = {}
+
     def __init__(self):
         pass
 
@@ -40,3 +42,12 @@ class DataFetcher:
 
     def remake_explanation(self, question: Question):
         return remake_explanation(question)
+
+    def send_message(self, question, message, system_prompt=None):
+        if question.id not in self.messages:
+            self.messages[question.id] = []
+        if system_prompt is not None and len(self.messages[question.id]) == 0:
+            self.messages[question.id].append(
+                {"role": "system", "content": system_prompt}
+            )
+        self.messages[question.id].append({"role": "user", "content": message})
