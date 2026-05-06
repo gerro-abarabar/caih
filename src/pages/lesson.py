@@ -72,3 +72,6 @@ if try_exam:
     initate_exam()
     st.session_state.exam = lesson.similar_exam
     st.switch_page("pages/exam.py")
+
+if not lesson.similar_exam.is_lesson:
+    lesson.similar_exam.is_lesson = True

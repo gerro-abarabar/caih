@@ -110,7 +110,7 @@ def get_exam_from_ai(questions, subject):
                 format=Exam.model_json_schema(),
             )
             raw_content = response.message.content
-            final_exam = Exam.model_validate_json(raw_content)
+            final_exam = Exam.model_validate_json(fix_content(raw_content))
             final_exam.add_images(formatted_images)
             print(f"Successfully generated {len(final_exam.types)} questions.")
         except Exception as e:
@@ -121,6 +121,20 @@ def get_exam_from_ai(questions, subject):
             break
 
     return final_exam
+
+
+def fix_content(content: str) -> str:
+    """Fixes the error of something like:
+        Invalid JSON: invalid escape at line 109 column 84 [type=json_invalid, input_value='{\n  "subject": "Mathema...n      ]\n    }\n  ]\n}', input_type=str]
+    Fixes it by changing the \n to \\n, and also changing the ]\n and }\n to ]\\n and }\\n so that it can be properly parsed by the JSON parser.
+    """
+    # Unescape newlines
+    content = content.replace("\\n", "\n")
+    # Fix the list new line
+    content = content.replace("]\\n", "]\n")
+    # Fix the set new line
+    content = content.replace("}\\n", "}\n")
+    return content
 
 
 def explain_exam(exam: List[QuestionList]):
@@ -183,7 +197,7 @@ def explain_exam(exam: List[QuestionList]):
                 format=Lesson.model_json_schema(),
             )
             raw_content = response.message.content
-            final_lesson = Lesson.model_validate_json(raw_content)
+            final_lesson = Lesson.model_validate_json(fix_content(raw_content))
             final_lesson.add_images(images)
 
         except Exception as e:
