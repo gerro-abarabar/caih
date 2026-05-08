@@ -38,69 +38,98 @@ if "chat_opened" not in st.session_state:
     st.session_state.chat_opened = False
     print("Initialized chat_opened to False")
 
+# DEBUGGING TOOL
+print("--- RERUN START ---")
+for key in st.session_state.keys():
+    if "chat_response" in str(key):
+        val = st.session_state[key]
+        print(f"Key: {key} | Type: {type(val)} | Data: {str(val)[:20]}...")
+
+
+def send_message(question_id, exam, chat_message_key, response_key):
+    print("We are sending")
+    user_input = st.session_state.get(chat_message_key, "")
+    if user_input.strip() == "":
+        print("No input provided")
+        return
+    else:
+        question = None
+        for question_list in exam:
+            try:
+                question = question_list.get_question(question_id)
+                break
+            except Exception:
+                continue
+        if question:
+            ai_response = st.session_state.data.send_message(
+                question,  # pyright: ignore
+                user_input,
+                "You are an expert tutor. Answer the question as best as you can, and give detailed explanations. If the question has images, take them into account when answering.",  # TODO: make this prompt better
+            )
+            st.session_state[response_key] = ai_response
+            st.session_state[chat_message_key] = ""  # Clear the input box after sending
+            print("Message sent, AI response received:", ai_response)
+        for key in st.session_state.keys():
+            if "chat_response" in str(key):
+                val = st.session_state[key]
+                print(f"Key: {key} | Type: {type(val)} | Data: {str(val)[:20]}...")
+    print("successfuly working")
+
 
 def print_exam(exam: List[QuestionList], is_all=False):
     # print(exam)
     chat_opened = st.session_state.chat_opened
     opened_chats = st.session_state.opened_chats
-    print("Opened chats", chat_opened)
     if chat_opened:
         questions, chat = st.columns([3, 1])
         with chat:
             st.markdown("## Chat")
-            tabs = st.tabs([str(question_id) for question_id in opened_chats.keys()])
+            tabs = st.tabs([f"Q-{question_id}" for question_id in opened_chats.keys()])
             for i, question_id in enumerate(opened_chats.keys()):
                 with tabs[i]:
                     st.markdown(f"### Question {question_id}")
-                    ai_stream = st.session_state.get(
-                        f"chat_response_{question_id}", False
-                    )
-                    if ai_stream:
-                        if not st.session_state.get("in_thinking", False):
-                            st.session_state.in_thinking = False
-                        print("AI stream found", ai_stream)
-                        for chunk in ai_stream:
-                            if chunk.message.thinking:  # Prints out the "AI is thinking..." message only once per question, and not for every chunk
-                                if not st.session_state.in_thinking:
-                                    st.markdown(f"**AI is thinking...**")
-                                    st.session_state.in_thinking = True
-                            elif chunk.message.content:
-                                if st.session_state.in_thinking:
-                                    st.session_state.in_thinking = False
-                                    st.markdown(f"**AI:**")
-                                st.markdown(chunk.message.content)
-                                print("Chunk content", chunk.message.content)
-                            st.rerun()
 
+                    response_key = f"chat_response_{question_id}"
+                    print(f"{response_key=}")
+
+                    ai_stream = st.session_state.get(response_key, False)
+                    print(f"{ai_stream=}")
+                    # AI Message logic
+                    if ai_stream:
+                        print("AI stream found", ai_stream)
+                        if isinstance(ai_stream, str):
+                            st.markdown(f"**AI:** {ai_stream}")
+
+                        else:
+                            status_container = st.empty()
+                            message_container = st.empty()
+                            full_message = ""
+
+                            for chunk in ai_stream:
+                                if chunk.message.thinking:  # Prints out the "AI is thinking..." message only once per question, and not for every chunk
+                                    status_container.info("AI is thinking...")
+
+                                if chunk.message.content:
+                                    status_container.empty()
+                                    full_message += chunk.message.content
+                                    message_container.markdown(full_message + "▌")
+                            message_container.markdown(full_message)
+                            st.session_state[response_key] = (
+                                full_message  # Saves the full message so it doesn't disappear when the component rerenders
+                            )
+                            st.rerun()
+                    chat_input_key = f"chat_input_{question_id}"
                     st.text_area(
                         "Your question to the AI",
-                        key=f"chat_input_{question_id}",
+                        key=chat_input_key,
                     )
-                    if st.button("Send", key=f"chat_send_{question_id}"):
-                        user_input = st.session_state[f"chat_input_{question_id}"]
-                        if user_input.strip() == "":
-                            st.warning("Please enter a question before sending.")
-                        else:
-                            with st.spinner("Getting AI response..."):
-                                for question_list in exam:
-                                    try:
-                                        question = question_list.get_question(
-                                            question_id
-                                        )
-                                        break
-                                    except Exception:
-                                        st.error("Question not found.")
-                                        return
-                                print("Question found", question)
-                                ai_response = st.session_state.data.send_message(
-                                    question,  # pyright: ignore
-                                    user_input,
-                                    "You are an expert tutor. Answer the question as best as you can, and give detailed explanations. If the question has images, take them into account when answering.",  # TODO: make this prompt better
-                                )
-                                st.session_state[f"chat_response_{question_id}"] = (
-                                    ai_response
-                                )
-                                st.rerun()
+                    st.button(
+                        "Send",
+                        key=f"chat_send_{question_id}",
+                        on_click=send_message,
+                        args=[question_id, exam, chat_input_key, response_key],
+                    )
+
     else:
         questions = st.container()
     with questions:
@@ -152,7 +181,6 @@ def print_exam(exam: List[QuestionList], is_all=False):
                         horizontal_alignment="center"
                     ):  # just so it looks better hehe
                         if st.button("Ask for help from AI", key=f"chat-{question.id}"):
-                            print("Opening chat")
                             st.session_state.chat_opened = True
                             st.session_state.opened_chats[question.id] = True
                             st.rerun()
@@ -184,7 +212,6 @@ WRONG = 2
 
 score_type = st.toggle('Use "Right minus wrong"')
 if CHOICES == {}:  # if no choices has been made
-    print("No choices have been made")
     for i, page in enumerate(
         EXAM.types
     ):  # Page: (questions,[questions]),(instructions,"instruction")

@@ -1,12 +1,12 @@
 import json
 import os
-from json import dump
+from json import dump, dumps
 from typing import List
 
 from datafetch.exam_model import Question, QuestionList
 from datafetch.explanation_model import Lesson
 
-from .prompting import explain_exam, get_exam_from_ai, remake_explanation
+from .prompting import chat_with_ai, explain_exam, get_exam_from_ai, remake_explanation
 
 
 class DataFetcher:
@@ -50,4 +50,14 @@ class DataFetcher:
             self.messages[question.id].append(
                 {"role": "system", "content": system_prompt}
             )
+            self.messages[question.id].append(
+                {
+                    "role": "system",
+                    "content": "The question you will discuss is: "
+                    + dumps(question.model_dump()),
+                }
+            )
         self.messages[question.id].append({"role": "user", "content": message})
+
+        response = chat_with_ai(self.messages[question.id])
+        return response
