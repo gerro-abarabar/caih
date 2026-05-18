@@ -8,9 +8,9 @@ This project needs to be able to do the following:
   - It can evaluate your weakness and tell what you're missing out on
   - May use an embedding system to find lessons that are similar to your weaknesses
 - [ ] Home page for giving help (Mathdash.com-style)
-- [ ] Recheck questions
+- [x] Recheck questions
 - [x] Ask for a better explanation
-- [ ] Ask questions according to problem
+- [x] Ask questions according to problem
 - [x] Timer
 - [x] Flashcard function
 - [ ] Make the flashcards look better

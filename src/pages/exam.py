@@ -48,11 +48,6 @@ if timer.started:  # If there is an exam that has just been generated, it will s
     )
 
 
-CORRECT = 1
-WRONG = 2
-DISABLED = 3
-
-
 def render_questions():
     exam_dict_key = current_page_type.instruction  # Grabs the instructions
     st.write("## " + exam_dict_key)
@@ -71,17 +66,9 @@ def render_questions():
             )
 
         def on_choice_click(button_id, choice, selected_question):
-            correct_answer = selected_question.correct_answer
-            question_state = st.session_state.question_states[selected_question.id]
-
-            for button in question_state.keys():
-                question_state[button] = DISABLED
-            if choice.id == correct_answer:
-                question_state[button_id] = CORRECT
-                print("Youre correct")
-            else:
-                question_state[button_id] = WRONG
-                print("Youre wrong")
+            st.session_state.selected_buttons[selected_question.id] = (
+                button_id  # Save the selected button for styling
+            )
             if (
                 st.session_state.choices.get(str(st.session_state.question_type))
                 is None
@@ -98,25 +85,9 @@ def render_questions():
                 st.session_state.choices[str(st.session_state.question_type)],
             )
 
-        st.session_state.question_states[question.id] = (
-            st.session_state.question_states.get(question.id, {})
-        )
-        question_state = st.session_state.question_states[question.id]
         for i, choice in enumerate(question.choices):
             # st.session_state[f"button_{question.id}{choice.id.lower()}_value"] = st.session_state.get(f"button_{question.id}{choice.id.lower()}_value", 0)
-
-            # print(f"Initialized button_{question['id']}{choice[0].lower()}_value to {st.session_state[f'button_{question['id']}{choice[0].lower()}_value']}")
-            # value = st.session_state[f"button_{question.id}{choice.id.lower()}_value"]
             button_id = f"button_{question.id}{choice.id.lower()}"
-            # if st.session_state.get(choice.id) is not None:
-            #     for i in range(1, len(st.session_state.keys())): # When AI adds too much choices
-            #         if st.session_state.get(button_id+str(i)) is None:
-            #             button_id=button_id+str(i)
-            #             break
-            question_state[button_id] = question_state.get(
-                button_id, 0
-            )  # Initialize state for each button
-
             # print(button_id)
             st.button(
                 f"{choice.choice}",
@@ -126,9 +97,7 @@ def render_questions():
                     button_id,
                     choice,
                     question,
-                ),  # TODO: fix the problem with correct answers being because it is only considering the last question
-                disabled=question_state[button_id]
-                != 0,  # Default value is 0, if the value changes (the user changed it, refer to on_choice_click) then it will disable.
+                ),
                 use_container_width=False,
             )
 
@@ -177,23 +146,21 @@ if st.session_state.question_type >= len(exam.types):
 
 # INVISIBLE DATA
 
-for (
-    key,
-    choices,
-) in st.session_state.question_states.items():  # This adds a class that makes your answer right or wrong based on the previous iteration of the program.
-    for button_id, choice in choices.items():
-        if choice == CORRECT:
-            st.markdown(
-                f"<style>.st-key-{button_id} {{ background-color: #30b31e; }}</style>",
-                unsafe_allow_html=True,
-            )
-        elif choice == WRONG:
-            st.markdown(
-                f"<style>.st-key-{button_id} {{ background-color: #872b2b; }}</style>",
-                unsafe_allow_html=True,
-            )
-        else:
-            pass
+for button_key in st.session_state.selected_buttons.values():
+    print("Selected button:", button_key)
+    st.markdown(
+        f"""
+        <style>
+        .st-key-{button_key} button {{
+            color: #5f6814;
+            background-color: #e6e9ef;
+            border: 2px solid #5f6814;
+            font-weight: bold;
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
 
 st.markdown(
     """

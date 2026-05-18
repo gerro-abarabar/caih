@@ -1,100 +1,118 @@
 {
-  "topic_title": "Foundational Principles of Biology, Physics, and Chemistry",
-  "core_explanation": "The exam errors indicate a need for clarification on universal scientific laws versus specific classifications. \n\n1. **Cell Theory Universality**: The three fundamental tenets apply to all life forms regardless of complexity. A common misconception is requiring a nucleus; however, cell theory only mandates that cells are the basic unit of life, all organisms are composed of them, and they arise from pre-existing cells. Prokaryotes represent a massive domain of life that lacks a nucleus but adheres strictly to cell theory.\n\n2. **Linear Proportionality in Mechanics**: Newton\u2019s Second Law (F=ma) dictates that acceleration is directly proportional to the net force applied when mass is constant. This means if the force is scaled by any factor, the acceleration responds with the exact same scaling factor. An error here usually stems from confusing inverse relationships with direct ones.\n\n3. **The Logarithmic pH Scale**: The pH scale is an inverse measure of hydrogen ion concentration. Because it is logarithmic, a lower number signifies a higher concentration of H+ ions (acidity). Values below 7 are acidic, while values above 7 are basic (alkaline).\n\n4. **Igneous Petrogenesis**: Rock classification is determined by the process of formation. Igneous rocks are exclusively formed from the cooling and crystallization of molten rock (magma or lava). Sedimentary rocks involve lithification of particles, and metamorphic rocks involve heat/pressure changes without melting.",
-  "historical_context": "The 17th through 19th centuries defined these frameworks. Isaac Newton's 'Principia' (1687) established the mathematical basis for motion. In the 1830s, Schleiden and Schwann unified botanical and zoological observations into Cell Theory, later refined by Virchow. S.P.L. S\u00f8rensen developed the pH scale in 1909 to standardize measurements in brewing and biochemical research. James Hutton, the 'Father of Modern Geology,' introduced Plutonism in the late 1700s, identifying the volcanic origins of igneous rocks against prevailing theories of aqueous origin.",
-  "memory_aids": [
-    {
-      "tool": "The ABC of Cell Theory",
-      "application": "A: All organisms are made of cells; B: Basic unit of life; C: Cells come from pre-existing cells.",
-      "images": []
-    },
-    {
-      "tool": "Double the Push, Double the Dash",
-      "application": "In F=ma, if you double the Force (push), you must double the Acceleration (dash) if mass stays the same.",
-      "images": []
-    },
-    {
-      "tool": "Low is Sour, High is Bitter",
-      "application": "Low pH (0-6) relates to acids (sour like lemons); High pH (8-14) relates to bases (bitter like soap).",
-      "images": []
-    },
-    {
-      "tool": "Ignite the Igneous",
-      "application": "Think of 'igniting' a fire. Igneous rocks come from the 'fire' of magma and lava.",
-      "images": []
-    }
-  ],
-  "similar_exam": {
-    "types": [
-      {
-        "questions": [
-          {
-            "id": 1,
-            "question": "An unknown specimen is observed under a microscope. It possesses a cell membrane and ribosomes but lacks a nucleus and mitochondria. According to Cell Theory, is this specimen a cell?",
-            "choices": [
-              { "choice": "No, because it lacks a nucleus.", "id": "A" },
-              {
-                "choice": "No, because it lacks membrane-bound organelles.",
-                "id": "B"
-              },
-              {
-                "choice": "Yes, because it is a structural and functional unit of life.",
-                "id": "C"
-              },
-              {
-                "choice": "Yes, but only if it can spontaneously generate from non-living matter.",
-                "id": "D"
-              }
-            ],
-            "images": [],
-            "correct_answer": "C",
-            "explanation": "Cell theory states the cell is the basic unit of life. The presence or absence of specific organelles like a nucleus (which defines eukaryotes) does not disqualify a specimen from being a cell if it functions as a basic unit of an organism.",
-            "answer": null
-          },
-          {
-            "id": 2,
-            "question": "A spacecraft in a vacuum fires its engines to produce a constant net force. If the spacecraft ejects half of its mass while the engine force remains constant, what happens to the acceleration?",
-            "choices": [
-              { "choice": "It is halved.", "id": "A" },
-              { "choice": "It remains the same.", "id": "B" },
-              { "choice": "It doubles.", "id": "C" },
-              { "choice": "It quadruples.", "id": "D" }
-            ],
-            "images": [],
-            "correct_answer": "C",
-            "explanation": "According to F=ma, acceleration (a) is equal to F/m. If force (F) is constant and mass (m) is divided by 2, the acceleration must increase by a factor of 2 to maintain the equality.",
-            "answer": null
-          },
-          {
-            "id": 3,
-            "question": "Solution A has a pH of 2 and Solution B has a pH of 5. Which statement accurately compares the two?",
-            "choices": [
-              {
-                "choice": "Solution B is more acidic than Solution A.",
-                "id": "A"
-              },
-              {
-                "choice": "Solution A has a higher concentration of hydrogen ions than Solution B.",
-                "id": "B"
-              },
-              { "choice": "Solution A is weakly basic.", "id": "C" },
-              {
-                "choice": "Solution B is 3 times more acidic than Solution A.",
-                "id": "D"
-              }
-            ],
-            "images": [],
-            "correct_answer": "B",
-            "explanation": "Lower pH values indicate higher acidity (higher concentration of H+ ions). Since 2 is lower than 5, Solution A is significantly more acidic than Solution B.",
-            "answer": null
-          }
-        ],
-        "instruction": "Apply fundamental scientific laws and theories to solve the following problems."
-      }
+    "topic_title": "Foundational Principles of Biology, Physics, and Chemistry",
+    "core_explanation": "The exam errors indicate a need for clarification on universal scientific laws versus specific classifications. \n\n1. **Cell Theory Universality**: The three fundamental tenets apply to all life forms regardless of complexity. A common misconception is requiring a nucleus; however, cell theory only mandates that cells are the basic unit of life, all organisms are composed of them, and they arise from pre-existing cells. Prokaryotes represent a massive domain of life that lacks a nucleus but adheres strictly to cell theory.\n\n2. **Linear Proportionality in Mechanics**: Newton\u2019s Second Law (F=ma) dictates that acceleration is directly proportional to the net force applied when mass is constant. This means if the force is scaled by any factor, the acceleration responds with the exact same scaling factor. An error here usually stems from confusing inverse relationships with direct ones.\n\n3. **The Logarithmic pH Scale**: The pH scale is an inverse measure of hydrogen ion concentration. Because it is logarithmic, a lower number signifies a higher concentration of H+ ions (acidity). Values below 7 are acidic, while values above 7 are basic (alkaline).\n\n4. **Igneous Petrogenesis**: Rock classification is determined by the process of formation. Igneous rocks are exclusively formed from the cooling and crystallization of molten rock (magma or lava). Sedimentary rocks involve lithification of particles, and metamorphic rocks involve heat/pressure changes without melting.",
+    "historical_context": "The 17th through 19th centuries defined these frameworks. Isaac Newton's 'Principia' (1687) established the mathematical basis for motion. In the 1830s, Schleiden and Schwann unified botanical and zoological observations into Cell Theory, later refined by Virchow. S.P.L. S\u00f8rensen developed the pH scale in 1909 to standardize measurements in brewing and biochemical research. James Hutton, the 'Father of Modern Geology,' introduced Plutonism in the late 1700s, identifying the volcanic origins of igneous rocks against prevailing theories of aqueous origin.",
+    "memory_aids": [
+        {
+            "tool": "The ABC of Cell Theory",
+            "application": "A: All organisms are made of cells; B: Basic unit of life; C: Cells come from pre-existing cells.",
+            "images": []
+        },
+        {
+            "tool": "Double the Push, Double the Dash",
+            "application": "In F=ma, if you double the Force (push), you must double the Acceleration (dash) if mass stays the same.",
+            "images": []
+        },
+        {
+            "tool": "Low is Sour, High is Bitter",
+            "application": "Low pH (0-6) relates to acids (sour like lemons); High pH (8-14) relates to bases (bitter like soap).",
+            "images": []
+        },
+        {
+            "tool": "Ignite the Igneous",
+            "application": "Think of 'igniting' a fire. Igneous rocks come from the 'fire' of magma and lava.",
+            "images": []
+        }
     ],
-    "subject": "Foundational Principles of Biology, Physics, and Chemistry",
-    "is_lesson": true
-  },
-  "images": [],
-  "saved": true
+    "similar_exam": {
+        "types": [
+            {
+                "questions": [
+                    {
+                        "id": 1,
+                        "question": "An unknown specimen is observed under a microscope. It possesses a cell membrane and ribosomes but lacks a nucleus and mitochondria. According to Cell Theory, is this specimen a cell?",
+                        "choices": [
+                            {
+                                "choice": "No, because it lacks a nucleus.",
+                                "id": "A"
+                            },
+                            {
+                                "choice": "No, because it lacks membrane-bound organelles.",
+                                "id": "B"
+                            },
+                            {
+                                "choice": "Yes, because it is a structural and functional unit of life.",
+                                "id": "C"
+                            },
+                            {
+                                "choice": "Yes, but only if it can spontaneously generate from non-living matter.",
+                                "id": "D"
+                            }
+                        ],
+                        "images": [],
+                        "correct_answer": "C",
+                        "explanation": "Topic: Determination of Cellular Status Based on Cell Theory\n\nDefinition: Cell Theory\nCell Theory posits that the cell is the fundamental structural and functional unit of all living organisms. It asserts that all living entities are composed of one or more cells and that all cells originate from pre-existing cells.\n\nAnalysis of Specimen Components:\n1. Cell Membrane: The presence of a plasma membrane establishes a semi-permeable boundary, enabling the maintenance of homeostasis and the separation of the internal cytoplasmic environment from the external medium.\n2. Ribosomes: The presence of ribosomes confirms the specimen's capacity for protein synthesis, a prerequisite for biological function and survival.\n3. Absence of Membrane-Bound Organelles: The absence of a nucleus and mitochondria indicates that the specimen is prokaryotic. Prokaryotic cells lack a membrane-bound nucleus and specialized organelles but remain viable biological units.\n\nDeductive Reasoning:\nThe classification of an entity as a cell is determined by its ability to function as the basic unit of life, regardless of internal structural complexity. While eukaryotic cells are characterized by the presence of a nucleus and mitochondria, prokaryotic cells (such as bacteria) satisfy all cellular requirements by possessing a cell membrane, genetic material, and a metabolic system. Therefore, the absence of membrane-bound organelles does not disqualify a specimen from being classified as a cell.\n\nConclusion:\nThe specimen is classified as a cell because it possesses the essential structural and functional requirements to support life. Choice C is the correct answer.",
+                        "answer": "B"
+                    },
+                    {
+                        "id": 2,
+                        "question": "A spacecraft in a vacuum fires its engines to produce a constant net force. If the spacecraft ejects half of its mass while the engine force remains constant, what happens to the acceleration?",
+                        "choices": [
+                            {
+                                "choice": "It is halved.",
+                                "id": "A"
+                            },
+                            {
+                                "choice": "It remains the same.",
+                                "id": "B"
+                            },
+                            {
+                                "choice": "It doubles.",
+                                "id": "C"
+                            },
+                            {
+                                "choice": "It quadruples.",
+                                "id": "D"
+                            }
+                        ],
+                        "images": [],
+                        "correct_answer": "C",
+                        "explanation": "Problem: Determination of the effect on acceleration when mass is reduced while force remains constant.\n\nDefinition: Newton's Second Law of Motion states that the net force (F) acting on an object is equal to the product of its mass (m) and its acceleration (a). This is expressed by the formula: F = ma.\n\nStep 1: Isolate the variable for acceleration. \nBy rearranging the formula, acceleration is defined as the ratio of force to mass: a = F / m.\n\nStep 2: Identify constant and variable parameters.\nIn this scenario, the net force (F) is constant. The initial mass (m_initial) is reduced by half, resulting in a final mass (m_final) where m_final = 0.5 * m_initial.\n\nStep 3: Analyze the mathematical relationship.\nBecause acceleration (a) is inversely proportional to mass (m) when force (F) is held constant, a decrease in mass results in a proportional increase in acceleration.\n\nStep 4: Calculate the change.\nSubstituting the new mass into the acceleration formula:\na_final = F / (0.5 * m_initial)\na_final = 2 * (F / m_initial)\na_final = 2 * a_initial\n\nConclusion: Reducing the mass of the spacecraft by half while maintaining a constant net force results in a doubling of the acceleration.\n\nCorrect Choice: C",
+                        "answer": "C"
+                    },
+                    {
+                        "id": 3,
+                        "question": "Solution A has a pH of 2 and Solution B has a pH of 5. Which statement accurately compares the two?",
+                        "choices": [
+                            {
+                                "choice": "Solution B is more acidic than Solution A.",
+                                "id": "A"
+                            },
+                            {
+                                "choice": "Solution A has a higher concentration of hydrogen ions than Solution B.",
+                                "id": "B"
+                            },
+                            {
+                                "choice": "Solution A is weakly basic.",
+                                "id": "C"
+                            },
+                            {
+                                "choice": "Solution B is 3 times more acidic than Solution A.",
+                                "id": "D"
+                            }
+                        ],
+                        "images": [],
+                        "correct_answer": "B",
+                        "explanation": "Lower pH values indicate higher acidity (higher concentration of H+ ions). Since 2 is lower than 5, Solution A is significantly more acidic than Solution B.",
+                        "answer": "B"
+                    }
+                ],
+                "instruction": "Apply fundamental scientific laws and theories to solve the following problems."
+            }
+        ],
+        "subject": "Foundational Principles of Biology, Physics, and Chemistry",
+        "is_lesson": true
+    },
+    "images": [],
+    "saved": true
 }

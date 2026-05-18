@@ -38,13 +38,6 @@ if "chat_opened" not in st.session_state:
     st.session_state.chat_opened = False
     print("Initialized chat_opened to False")
 
-# DEBUGGING TOOL
-print("--- RERUN START ---")
-for key in st.session_state.keys():
-    if "chat_response" in str(key):
-        val = st.session_state[key]
-        print(f"Key: {key} | Type: {type(val)} | Data: {str(val)[:20]}...")
-
 
 def send_message(question_id, exam, chat_message_key, response_key):
     print("We are sending")
@@ -170,6 +163,7 @@ def print_exam(exam: List[QuestionList], is_all=False):
                             key=f"explanation-{question.id}",
                         ):
                             print(question.explanation)
+                            st.session_state.asked_better_explanation = True
                             with st.spinner("Making better explanation..."):
                                 question.explanation = (
                                     st.session_state.data.remake_explanation(question)
@@ -187,6 +181,18 @@ def print_exam(exam: List[QuestionList], is_all=False):
         if not EXAM.is_lesson:
             if st.button("Create a new lesson"):
                 create_lesson(exam)
+        elif EXAM.is_lesson:  # if it is a lesson
+            print("This is a lesson")
+            if asked_better_explanation:
+                if st.button("Save in Lesson"):
+                    if st.session_state.lesson:
+                        st.session_state.exam.types = exam
+                        st.session_state.lesson.similar_exam = st.session_state.exam
+                        st.session_state.data.save_lesson(
+                            st.session_state.lesson, st.session_state.lesson.topic_title
+                        )
+                        st.success("Lesson saved successfully!")
+                st.session_state.asked_better_explanation = False
 
 
 st.title("Explanations")
@@ -208,6 +214,12 @@ total_questions = sum(len(page.questions) for page in EXAM.types)
 CORRECT = 1
 UNANSWERED = 0
 WRONG = 2
+
+if st.session_state.get("asked_better_explanation") is None:
+    st.session_state.asked_better_explanation = False
+    asked_better_explanation = False
+else:
+    asked_better_explanation = st.session_state.asked_better_explanation
 
 
 score_type = st.toggle('Use "Right minus wrong"')
@@ -240,15 +252,18 @@ else:
         wrong_questions.append(copy.deepcopy(page))
         # print("Un answered",unanswered_questions)
         # print(f"{CHOICES=}")
-        for question, answer in CHOICES.get(str(i), []):
+        for question, answer in CHOICES.get(str(i), []):  # ( Question, Answer )
             try:
                 unanswered_questions[i].delete_question(question.id)
             except:
                 pass
-            print(question, "Rizzer")
+            print(
+                f"Question ID: {question.id}, User Answer: {answer.choice}, Correct Answer: {question.get_choice(question.correct_answer).choice}"
+            )
             if answer.id == question.correct_answer:  # Correct
                 print("youre right")
                 wrong_questions[i].delete_question(question.id)
+                print(f"{correct_questions[i].get_question(question.id)=}")
                 correct_questions[i].add_answer(question.id, answer.id)
                 page.add_answer(question.id, answer.id)  # Puts back the original answer
                 score += 1
