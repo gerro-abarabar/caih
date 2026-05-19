@@ -1,5 +1,5 @@
-import json
 import time
+from datetime import datetime
 
 import streamlit as st
 
@@ -12,17 +12,11 @@ def get_exam(amount, subject, _data_fetcher):
         for q in category.questions:
             for img in q.images:
                 q.question = q.question.replace(
-                    img.image_name, f"data:image/png;base64,{img.data}"
+                    img.name, f"data:image/png;base64,{img.data}"
                 )
 
     st.session_state.timer.start(st.session_state.time_amount)
     return exam
-
-
-def img_to_base64(img_path):
-    with open(img_path, "rb") as image_file:
-        encoded_string = base64.b64encode(image_file.read()).decode()
-    return f"data:image/png;base64,{encoded_string}"
 
 
 # Pass the dependencies as arguments
@@ -47,6 +41,8 @@ if timer.started:  # If there is an exam that has just been generated, it will s
         f"### Time left: {time.strftime('%M:%S', time.gmtime(timer.get_time_left()))}"
     )
 
+exam.taken_at = datetime.now().isoformat()
+
 
 def render_questions():
     exam_dict_key = current_page_type.instruction  # Grabs the instructions
@@ -66,20 +62,19 @@ def render_questions():
             )
 
         def on_choice_click(button_id, choice, selected_question):
-            st.session_state.selected_buttons[selected_question.id] = (
-                button_id  # Save the selected button for styling
-            )
-            if (
-                st.session_state.choices.get(str(st.session_state.question_type))
-                is None
-            ):
-                st.session_state.choices[
-                    str(st.session_state.question_type)
-                ] = []  # Initialize saving choices
+            st.session_state.selected_buttons[selected_question.id] = button_id
 
-            st.session_state.choices[str(st.session_state.question_type)].append(
-                (selected_question, choice)
-            )  # Saves answer
+            page_key = str(st.session_state.question_type)
+            if st.session_state.choices.get(page_key) is None:
+                st.session_state.choices[
+                    page_key
+                ] = {}  # Change from List [] to Dict {}
+
+            # This overwrites any previous choice for this specific question ID
+            st.session_state.choices[page_key][selected_question.id] = (
+                selected_question,
+                choice,
+            )
             print(
                 "save answer",
                 st.session_state.choices[str(st.session_state.question_type)],

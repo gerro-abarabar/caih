@@ -1,10 +1,10 @@
 import copy
-import json
-from typing import List, Optional
+from typing import List
 
 import streamlit as st
 
-from datafetch.exam_model import Exam, Question, QuestionList
+from datafetch.exam_model import QuestionList
+from utils.save_exam import save_exam
 
 st.set_page_config(layout="wide")
 
@@ -135,15 +135,15 @@ def print_exam(exam: List[QuestionList], is_all=False):
                 st.markdown(
                     f"## {question.id}.  {question.question}", unsafe_allow_html=True
                 )
-                if question.answer == None:
+                if question.answer is None:
                     st.write("You did not answer this question")
                     pass
                 else:
                     user_answer = question.get_choice(question.answer)
-                    st.write(f"Your answer: {user_answer.choice}")
+                    st.write(f"Your answer: {user_answer.choice}")  # pyright: ignore[reportOptionalMemberAccess]
 
                 st.write(
-                    f"Correct answer: {question.get_choice(question.correct_answer).choice}"
+                    f"Correct answer: {question.get_choice(question.correct_answer).choice}"  # pyright: ignore[reportOptionalMemberAccess]
                 )
                 st.write(
                     "---"
@@ -239,7 +239,7 @@ if CHOICES == {}:  # if no choices has been made
                 correct_questions[i].delete_question(question.id)
                 wrong_questions[i].delete_question(question.id)
 
-            except:
+            except Exception:
                 pass
 else:
     for i, page in enumerate(
@@ -252,10 +252,12 @@ else:
         wrong_questions.append(copy.deepcopy(page))
         # print("Un answered",unanswered_questions)
         # print(f"{CHOICES=}")
-        for question, answer in CHOICES.get(str(i), []):  # ( Question, Answer )
+        for question, answer in CHOICES.get(
+            str(i), []
+        ).values():  # ( Question, Answer )
             try:
                 unanswered_questions[i].delete_question(question.id)
-            except:
+            except Exception:
                 pass
             print(
                 f"Question ID: {question.id}, User Answer: {answer.choice}, Correct Answer: {question.get_choice(question.correct_answer).choice}"
@@ -275,6 +277,7 @@ else:
                 if score_type:
                     score -= 0.25
 
+EXAM.score = score
 
 st.write(f"Your final score is {max(score, 0)}/{total_questions}.")
 
@@ -293,3 +296,6 @@ else:
 
 if st.button("Go Home"):
     st.switch_page("main.py")
+if st.button("Save Exam"):
+    save_exam(EXAM)
+    st.success("Successfully saved exam.")

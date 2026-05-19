@@ -94,6 +94,7 @@ def get_exam_from_ai(questions, subject):
                 "\n5. Put the data of the image in the 'images' key where it was referenced."
                 "\n6. You may not create any new image. Only use the provided ones and use the same name used in the question."
                 "\n7. You must use the same name for the image used in the question, you may not use the image data itself."
+                "\n8. Strictly, do not use emojis."
             ),
             "images": image_list,  # Ensure your Ollama client supports the 'images' key here
         },
@@ -180,7 +181,8 @@ def explain_exam(exam: List[QuestionList]):
                 "- Do not use markdown backticks (```json).\n"
                 "- Maintain an objective, academic tone; avoid conversational or entertaining fillers.\n"
                 "- Ensure the 'similar_exam' focuses on practical application of the concepts.\n"
-                "- Ensure the JSON is valid and mirrors the internal logic of the missed questions."
+                "- Ensure the JSON is valid and mirrors the internal logic of the missed questions.\n"
+                "- Strictly, do not use emojis."
             ),
             "images": images.values(),
         },
@@ -234,7 +236,8 @@ def remake_explanation(question: Question):
                 f"Original question with explanation: {json.dumps(question.model_dump())}\n\n"
                 "TASK: Remake the explanation into a formal, structured academic note. "
                 "The output must be plain text only. Do not use markdown backticks or JSON formatting. "
-                "Maintain a strictly objective and neutral tone."
+                "Maintain a strictly objective and neutral tone. "
+                "Strictly, do not use emojis."
             ),
         },
     ]

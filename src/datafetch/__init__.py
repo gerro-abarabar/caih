@@ -24,7 +24,7 @@ class DataFetcher:
     def save_lesson(self, lesson: Lesson, lesson_name: str = ""):
         i = 0
         while True:
-            if not lesson_name in os.listdir("./saved_lessons"):
+            if lesson_name not in os.listdir("./saved_lessons"):
                 lesson_name = f"{lesson_name}_{i}"
                 break
             i += 1
@@ -34,7 +34,7 @@ class DataFetcher:
             dump(lesson.model_dump(), f, indent=4)
 
     def get_lessons(self):
-        return os.listdir(f"./saved_lessons/")
+        return os.listdir("./saved_lessons/")
 
     def get_lesson(self, lesson_name: str = ""):
         with open(f"./saved_lessons/{lesson_name}", "r") as f:

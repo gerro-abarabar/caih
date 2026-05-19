@@ -1,4 +1,5 @@
 # Pydantic Model of what the AI must follow
+from datetime import datetime
 from typing import Any, List, Optional
 
 from pydantic import BaseModel
@@ -88,7 +89,7 @@ class QuestionList(BaseModel):
         image_dict = {}
         for question in self.questions:
             if images := question.get_images() != []:
-                image_dict[images.name] = images
+                image_dict[images.name] = images  # pyright: ignore[reportAttributeAccessIssue]
         return image_dict
 
     def remove_image(self, question_id):
@@ -111,6 +112,8 @@ class Exam(BaseModel):
     types: List[QuestionList]
     subject: str
     is_lesson: bool
+    taken_at: Optional[datetime] = None
+    score: Optional[int] = None
 
     def add_images(self, images: dict):
         for question_list in self.types:

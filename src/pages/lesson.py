@@ -1,11 +1,6 @@
-import json
-
 import streamlit as st
 
-from datafetch.exam_model import Exam
 from utils.flashcards import (
-    get_flashcard_topics,
-    get_flashcards,
     save_text_to_flashcard,
 )
 from utils.initiate_exam import initate_exam

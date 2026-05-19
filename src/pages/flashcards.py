@@ -1,7 +1,5 @@
 import streamlit as st
 
-from utils.flashcard_model import Flashcard, FlashcardSet
-
 st.set_page_config(page_title="Flashcards")
 
 flashcards_set = st.session_state.flashcards_set
