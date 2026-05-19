@@ -1,0 +1,273 @@
+{
+  "types": [
+    {
+      "questions": [
+        {
+          "id": 1,
+          "question": "What is the value of x if 2^(x+1) = 32?",
+          "choices": [
+            {
+              "choice": "A. 3",
+              "id": "0"
+            },
+            {
+              "choice": "B. 4",
+              "id": "1"
+            },
+            {
+              "choice": "C. 5",
+              "id": "2"
+            },
+            {
+              "choice": "D. 6",
+              "id": "3"
+            }
+          ],
+          "images": [],
+          "correct_answer": "1",
+          "explanation": "To solve 2^(x+1) = 32, express 32 as a power of 2. Since 32 = 2^5, we have 2^(x+1) = 2^5. Equating the exponents, x + 1 = 5, which leads to x = 4.",
+          "answer": "1"
+        },
+        {
+          "id": 2,
+          "question": "Simplify the expression: (x^2 y^3)^4 / (x^3 y^5)",
+          "choices": [
+            {
+              "choice": "A. x^5 y^7",
+              "id": "0"
+            },
+            {
+              "choice": "B. x^11 y^12",
+              "id": "1"
+            },
+            {
+              "choice": "C. x^5 y^12",
+              "id": "2"
+            },
+            {
+              "choice": "D. x^2 y^2",
+              "id": "3"
+            }
+          ],
+          "images": [],
+          "correct_answer": "0",
+          "explanation": "First, apply the power of a power rule: (x^2 y^3)^4 = x^(2*4) y^(3*4) = x^8 y^12. Then, divide by x^3 y^5 using the quotient rule: x^(8-3) y^(12-5) = x^5 y^7.",
+          "answer": "1"
+        },
+        {
+          "id": 3,
+          "question": "Find the sum of the interior angles of a regular hexagon.",
+          "choices": [
+            {
+              "choice": "A. 360 degrees",
+              "id": "0"
+            },
+            {
+              "choice": "B. 540 degrees",
+              "id": "1"
+            },
+            {
+              "choice": "C. 720 degrees",
+              "id": "2"
+            },
+            {
+              "choice": "D. 900 degrees",
+              "id": "3"
+            }
+          ],
+          "images": [],
+          "correct_answer": "2",
+          "explanation": "The formula for the sum of interior angles of a polygon with n sides is (n-2) * 180. For a hexagon, n=6. So, (6-2) * 180 = 4 * 180 = 720 degrees.",
+          "answer": "1"
+        },
+        {
+          "id": 4,
+          "question": "If f(x) = 3x^2 - 5x + 2, what is f(-2)?",
+          "choices": [
+            {
+              "choice": "A. 0",
+              "id": "0"
+            },
+            {
+              "choice": "B. 4",
+              "id": "1"
+            },
+            {
+              "choice": "C. 12",
+              "id": "2"
+            },
+            {
+              "choice": "D. 24",
+              "id": "3"
+            }
+          ],
+          "images": [],
+          "correct_answer": "3",
+          "explanation": "Substitute x = -2 into the function: f(-2) = 3(-2)^2 - 5(-2) + 2 = 3(4) + 10 + 2 = 12 + 10 + 2 = 24.",
+          "answer": "1"
+        },
+        {
+          "id": 5,
+          "question": "Which of the following is equivalent to log(a) + log(b)?",
+          "choices": [
+            {
+              "choice": "A. log(a + b)",
+              "id": "0"
+            },
+            {
+              "choice": "B. log(a * b)",
+              "id": "1"
+            },
+            {
+              "choice": "C. log(a / b)",
+              "id": "2"
+            },
+            {
+              "choice": "D. log(a^b)",
+              "id": "3"
+            }
+          ],
+          "images": [],
+          "correct_answer": "1",
+          "explanation": "According to the product rule of logarithms, the sum of two logarithms with the same base is equal to the logarithm of the product of their arguments: log(a) + log(b) = log(a * b).",
+          "answer": "3"
+        },
+        {
+          "id": 6,
+          "question": "Solve for x: 3(x - 4) = 2(x + 1)",
+          "choices": [
+            {
+              "choice": "A. 10",
+              "id": "0"
+            },
+            {
+              "choice": "B. 12",
+              "id": "1"
+            },
+            {
+              "choice": "C. 14",
+              "id": "2"
+            },
+            {
+              "choice": "D. 16",
+              "id": "3"
+            }
+          ],
+          "images": [],
+          "correct_answer": "2",
+          "explanation": "Expand both sides: 3x - 12 = 2x + 2. Subtract 2x from both sides: x - 12 = 2. Add 12 to both sides: x = 14.",
+          "answer": "2"
+        },
+        {
+          "id": 7,
+          "question": "What is the discriminant of the quadratic equation x^2 - 4x + 4 = 0?",
+          "choices": [
+            {
+              "choice": "A. 0",
+              "id": "0"
+            },
+            {
+              "choice": "B. 8",
+              "id": "1"
+            },
+            {
+              "choice": "C. 16",
+              "id": "2"
+            },
+            {
+              "choice": "D. -16",
+              "id": "3"
+            }
+          ],
+          "images": [],
+          "correct_answer": "0",
+          "explanation": "The discriminant is given by b^2 - 4ac. Here, a=1, b=-4, and c=4. Discriminant = (-4)^2 - 4(1)(4) = 16 - 16 = 0.",
+          "answer": "3"
+        },
+        {
+          "id": 8,
+          "question": "Find the coordinates of the midpoint between (2, 3) and (8, 11).",
+          "choices": [
+            {
+              "choice": "A. (5, 7)",
+              "id": "0"
+            },
+            {
+              "choice": "B. (10, 14)",
+              "id": "1"
+            },
+            {
+              "choice": "C. (3, 4)",
+              "id": "2"
+            },
+            {
+              "choice": "D. (5, 4)",
+              "id": "3"
+            }
+          ],
+          "images": [],
+          "correct_answer": "0",
+          "explanation": "The midpoint formula is ((x1+x2)/2, (y1+y2)/2). Midpoint = ((2+8)/2, (3+11)/2) = (10/2, 14/2) = (5, 7).",
+          "answer": null
+        },
+        {
+          "id": 9,
+          "question": "What is the value of sin(30 degrees)?",
+          "choices": [
+            {
+              "choice": "A. 1/2",
+              "id": "0"
+            },
+            {
+              "choice": "B. sqrt(3)/2",
+              "id": "1"
+            },
+            {
+              "choice": "C. 1",
+              "id": "2"
+            },
+            {
+              "choice": "D. 0",
+              "id": "3"
+            }
+          ],
+          "images": [],
+          "correct_answer": "0",
+          "explanation": "Based on the unit circle and special right triangles, the sine of 30 degrees is exactly 1/2.",
+          "answer": "1"
+        },
+        {
+          "id": 10,
+          "question": "If a circle has an area of 25*pi, what is its circumference?",
+          "choices": [
+            {
+              "choice": "A. 5*pi",
+              "id": "0"
+            },
+            {
+              "choice": "B. 10*pi",
+              "id": "1"
+            },
+            {
+              "choice": "C. 15*pi",
+              "id": "2"
+            },
+            {
+              "choice": "D. 20*pi",
+              "id": "3"
+            }
+          ],
+          "images": [],
+          "correct_answer": "1",
+          "explanation": "Area = pi*r^2 = 25*pi, so r^2 = 25 and r = 5. The circumference formula is 2*pi*r. Thus, Circumference = 2 * pi * 5 = 10*pi.",
+          "answer": "0"
+        }
+      ],
+      "instruction": "Choose the letter of the best answer."
+    }
+  ],
+  "subject": "Advanced Mathematics",
+  "is_lesson": false,
+  "taken_at": "2026-05-19T15:54:24.604599",
+  "score": 2
+}
