@@ -12,10 +12,18 @@
     }
   },
   "progress": {
-    "exams_taken": 0,
+    "exams_taken": 8,
     "lessons_completed": 0,
     "flashcards_reviewed": 0,
-    "subjects": {}
+    "subjects": {
+      "science": 13,
+      "mathematics": 3
+    },
+    "general science": 0,
+    "chemistry": 0,
+    "science": 0,
+    "mathematics": 0,
+    "null": 0
   },
   "meta": {
     "created_by": "src/pages/user.py",

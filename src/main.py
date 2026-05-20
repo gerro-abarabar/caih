@@ -9,8 +9,10 @@ from typing import Any, Dict
 import streamlit as st
 
 from datafetch import DataFetcher
+from src.utils import initiate_exam
 from utils.flashcards import get_flashcard_topics, get_flashcards
 from utils.initiate_exam import initate_exam
+from utils.save_exam import get_exam, get_exam_files
 from utils.user_data import get_data_file, load_user_data, save_user_data
 
 st.set_page_config(page_title="Exam Generator")
@@ -27,9 +29,12 @@ st.title("CAIH")
 
 DATA_FILE = get_data_file()
 user_data = load_user_data(DATA_FILE)
+st.session_state.user_data = (
+    user_data  # Store in session state for easy access across pages
+)
 
-progress_data = user_data.get("progress_data", {})
-for subject in SUBJECTS:
+progress_data = user_data.get("progress", {})
+for subject in progress_data.get("subjects", []):
     if not progress_data.get(subject.lower(), False):
         progress_data[subject.lower()] = 0
 
@@ -42,21 +47,19 @@ with levels_expander:
     st.write(f"- Exams Taken: {progress_data.get('exams_taken', 0)}")
     st.write(f"- Lessons Completed: {progress_data.get('lessons_completed', 0)}")
     st.write(f"- Flashcards Reviewed: {progress_data.get('flashcards_reviewed', 0)}")
-    for subject in SUBJECTS:
+    for subject, value in progress_data.get("subjects", {}).items():
         with st.container():
-            st.markdown(f"#### {subject}")
+            st.markdown(f"#### {subject.capitalize()}")
             level, progress = st.columns([1, 4])
             with level:
-                st.markdown(f"Level: {progress_data.get(subject.lower(), 0) // 100}")
+                st.markdown(f"Level: {value // 100}")
             with progress:
-                st.progress(progress_data.get(subject.lower(), 0) % 100)
+                st.progress(value % 100)
 
 save_user_data(DATA_FILE, user_data)
 
-main_page, user_page = st.columns([3, 1])
-
-exam_page, lessons_page, flashcards_page = st.tabs(
-    ["Generate Exam", "Lessons", "Flashcards"]
+exam_page, lessons_page, flashcards_page, saved_exams_page = st.tabs(
+    ["Generate Exam", "Lessons", "Flashcards", "Saved Exams"]
 )
 with exam_page:
     st.write("Click the button below to generate a new exam.")
@@ -98,6 +101,18 @@ with flashcards_page:
                 st.session_state.flashcards_set = get_flashcards(topic)
                 st.switch_page("pages/flashcards.py")
 
+with saved_exams_page:
+    st.write("## Saved Exams")
+    with st.container(horizontal_alignment="left", border=True):
+        for i, exam in enumerate(get_exam_files()[::-1]):
+            if st.button(
+                f"{i + 1}. {exam[:-5]}", args=[exam], key=f"saved_exam_{exam}"
+            ):
+                initate_exam()  # forgive me for my bad spelling
+                st.session_state.exam = get_exam(exam)
+                st.session_state.exam.is_lesson = False
+
+                st.switch_page("pages/exam.py")
 
 if start:
     st.cache_resource.clear()

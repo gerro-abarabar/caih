@@ -84,3 +84,19 @@ def load_user_data(path: Path) -> Dict[str, Any]:
 def save_user_data(path: Path, data: Dict[str, Any]) -> None:
     """Persist user data atomically."""
     _atomic_write(path, data)
+
+
+def evolve_subject_progress(
+    user_data: Dict[str, Any], subject: str, increment: float = 1.0
+) -> None:
+    """Helper to update progress for a specific subject."""
+    user_data["progress"]["subjects"][subject] = (
+        user_data["progress"]["subjects"].get(subject, 0) + increment
+    )
+    _atomic_write(get_data_file(), user_data)
+
+
+def increment_exams_taken(user_data: Dict[str, Any]) -> None:
+    """Helper to increment the total exams taken."""
+    user_data["progress"]["exams_taken"] += 1
+    _atomic_write(get_data_file(), user_data)

@@ -1,0 +1,275 @@
+{
+  "types": [
+    {
+      "questions": [
+        {
+          "id": 1,
+          "question": "Which of the following is a characteristic of all living organisms?",
+          "choices": [
+            {
+              "choice": "Ability to move from one place to another",
+              "id": "A"
+            },
+            {
+              "choice": "Ability to maintain a constant internal temperature",
+              "id": "B"
+            },
+            {
+              "choice": "Ability to reproduce and pass on genetic information",
+              "id": "C"
+            },
+            {
+              "choice": "Ability to breathe oxygen from the atmosphere",
+              "id": "D"
+            }
+          ],
+          "images": [],
+          "correct_answer": "C",
+          "explanation": "Reproduction and the transmission of hereditary material are universal properties of life. While movement, homeostasis (constant temperature), and aerobic respiration are common, they are not shared by all living things (e.g., plants don't move locations, and some bacteria are anaerobic).",
+          "answer": "A"
+        },
+        {
+          "id": 2,
+          "question": "An object is moving in a circular path. If the force holding it in the circle is suddenly removed, the object will move in which direction?",
+          "choices": [
+            {
+              "choice": "Continue in the circular path",
+              "id": "A"
+            },
+            {
+              "choice": "Fly straight outward from the center",
+              "id": "B"
+            },
+            {
+              "choice": "Move tangentially to the circle",
+              "id": "C"
+            },
+            {
+              "choice": "Move back toward the center of the circle",
+              "id": "D"
+            }
+          ],
+          "images": [],
+          "correct_answer": "C",
+          "explanation": "According to Newton's First Law of Motion (Inertia), an object in motion stays in motion in a straight line unless acted upon by an external force. In circular motion, the velocity vector is always tangential to the path. Removing the centripetal force allows the object to continue along that tangent line.",
+          "answer": "A"
+        },
+        {
+          "id": 3,
+          "question": "Which law of chemistry is demonstrated when 10g of reactant A and 5g of reactant B produce exactly 15g of product C?",
+          "choices": [
+            {
+              "choice": "Law of Multiple Proportions",
+              "id": "A"
+            },
+            {
+              "choice": "Law of Conservation of Mass",
+              "id": "B"
+            },
+            {
+              "choice": "Law of Definite Proportions",
+              "id": "C"
+            },
+            {
+              "choice": "Avogadro's Law",
+              "id": "D"
+            }
+          ],
+          "images": [],
+          "correct_answer": "B",
+          "explanation": "The Law of Conservation of Mass states that mass is neither created nor destroyed in a chemical reaction. Since the total mass of reactants (10g + 5g = 15g) equals the total mass of the product (15g), this law is demonstrated.",
+          "answer": "A"
+        },
+        {
+          "id": 4,
+          "question": "In a chemical reaction, if the system absorbs heat from the surroundings, the process is classified as:",
+          "choices": [
+            {
+              "choice": "Exothermic with a negative enthalpy change",
+              "id": "A"
+            },
+            {
+              "choice": "Endothermic with a negative enthalpy change",
+              "id": "B"
+            },
+            {
+              "choice": "Exothermic with a positive enthalpy change",
+              "id": "C"
+            },
+            {
+              "choice": "Endothermic with a positive enthalpy change",
+              "id": "D"
+            }
+          ],
+          "images": [],
+          "correct_answer": "D",
+          "explanation": "Endothermic processes are those where heat is absorbed into the system. By IUPAC convention, energy entering a system is assigned a positive sign, meaning the change in enthalpy (delta H) is positive.",
+          "answer": "C"
+        },
+        {
+          "id": 5,
+          "question": "A hydrocarbon that contains only single bonds between carbon atoms is known as a(n):",
+          "choices": [
+            {
+              "choice": "Alkene",
+              "id": "A"
+            },
+            {
+              "choice": "Alkyne",
+              "id": "B"
+            },
+            {
+              "choice": "Alkane",
+              "id": "C"
+            },
+            {
+              "choice": "Aromatic",
+              "id": "D"
+            }
+          ],
+          "images": [],
+          "correct_answer": "C",
+          "explanation": "Alkanes are saturated hydrocarbons, meaning they contain only single C-C bonds. Alkenes contain at least one double bond, and alkynes contain at least one triple bond.",
+          "answer": "B"
+        },
+        {
+          "id": 6,
+          "question": "Which of the following describes the state of a substance during the first plateau of a heating curve?",
+          "choices": [
+            {
+              "choice": "Purely solid",
+              "id": "A"
+            },
+            {
+              "choice": "A mixture of solid and liquid",
+              "id": "B"
+            },
+            {
+              "choice": "Purely liquid",
+              "id": "C"
+            },
+            {
+              "choice": "A mixture of liquid and gas",
+              "id": "D"
+            }
+          ],
+          "images": [],
+          "correct_answer": "B",
+          "explanation": "The first plateau on a heating curve represents the melting point. At this temperature, the heat energy (latent heat of fusion) is used to break the bonds of the solid, resulting in a coexistence of both solid and liquid phases until the melting is complete.",
+          "answer": "A"
+        },
+        {
+          "id": 7,
+          "question": "What is the primary purpose of homeostasis in living organisms?",
+          "choices": [
+            {
+              "choice": "To ensure the organism can reproduce",
+              "id": "A"
+            },
+            {
+              "choice": "To maintain a stable internal environment",
+              "id": "B"
+            },
+            {
+              "choice": "To increase the rate of metabolism",
+              "id": "C"
+            },
+            {
+              "choice": "To allow the organism to change its species",
+              "id": "D"
+            }
+          ],
+          "images": [],
+          "correct_answer": "B",
+          "explanation": "Homeostasis is the process by which biological systems maintain stability while adjusting to changing external conditions, ensuring that internal variables (like pH and temperature) remain within a livable range.",
+          "answer": "B"
+        },
+        {
+          "id": 8,
+          "question": "If you need to balance the equation Al + O2 -> Al2O3, what are the correct coefficients for Al, O2, and Al2O3 respectively?",
+          "choices": [
+            {
+              "choice": "2, 3, 2",
+              "id": "A"
+            },
+            {
+              "choice": "4, 3, 2",
+              "id": "B"
+            },
+            {
+              "choice": "4, 2, 1",
+              "id": "C"
+            },
+            {
+              "choice": "2, 2, 1",
+              "id": "D"
+            }
+          ],
+          "images": [],
+          "correct_answer": "B",
+          "explanation": "To balance the equation, you need 4 Aluminum atoms (4Al), 3 Oxygen molecules (3O2, providing 6 oxygen atoms), resulting in 2 Aluminum Oxide molecules (2Al2O3, containing 4 Al and 6 O).",
+          "answer": "B"
+        },
+        {
+          "id": 9,
+          "question": "A substance is heating up. The temperature rises from 20 degrees to 50 degrees over 10 minutes. During this time, the substance is:",
+          "choices": [
+            {
+              "choice": "Undergoing a phase change",
+              "id": "A"
+            },
+            {
+              "choice": "In a single phase",
+              "id": "B"
+            },
+            {
+              "choice": "At its boiling point",
+              "id": "C"
+            },
+            {
+              "choice": "At its freezing point",
+              "id": "D"
+            }
+          ],
+          "images": [],
+          "correct_answer": "B",
+          "explanation": "A rise in temperature indicates that the added heat is increasing the kinetic energy of the molecules. Phase changes occur at constant temperatures (plateaus). Since the temperature is changing, the substance is in a single phase.",
+          "answer": "C"
+        },
+        {
+          "id": 10,
+          "question": "Which of the following is an example of a response to stimuli?",
+          "choices": [
+            {
+              "choice": "A plant growing taller over a month",
+              "id": "A"
+            },
+            {
+              "choice": "A cell dividing into two daughter cells",
+              "id": "B"
+            },
+            {
+              "choice": "A Venus flytrap closing when a fly touches its hairs",
+              "id": "C"
+            },
+            {
+              "choice": "A bacterium consuming glucose for energy",
+              "id": "D"
+            }
+          ],
+          "images": [],
+          "correct_answer": "C",
+          "explanation": "Responding to stimuli involves a rapid reaction to an environmental change. The closing of a Venus flytrap in response to touch is a classic example of this biological property.",
+          "answer": null
+        }
+      ],
+      "instruction": "Answer the following questions based on the principles of Biology, Chemistry, and Physics."
+    }
+  ],
+  "subject": "General Science",
+  "is_lesson": false,
+  "taken_at": "2026-05-20T15:24:32.825768",
+  "score": 2,
+  "saved": true,
+  "subject_folder": "science"
+}

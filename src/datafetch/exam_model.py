@@ -112,8 +112,10 @@ class Exam(BaseModel):
     types: List[QuestionList]
     subject: str
     is_lesson: bool
-    taken_at: Optional[datetime] = None
+    taken_at: Optional[str] = None
     score: Optional[int] = None
+    saved: bool = False
+    subject_folder: Optional[str] = None
 
     def add_images(self, images: dict):
         for question_list in self.types:

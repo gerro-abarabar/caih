@@ -1,0 +1,275 @@
+{
+  "types": [
+    {
+      "questions": [
+        {
+          "id": 1,
+          "question": "Which of the following cell organelles is primarily responsible for synthesizing proteins?",
+          "choices": [
+            {
+              "choice": "Mitochondria",
+              "id": "A"
+            },
+            {
+              "choice": "Ribosomes",
+              "id": "B"
+            },
+            {
+              "choice": "Golgi apparatus",
+              "id": "C"
+            },
+            {
+              "choice": "Lysosomes",
+              "id": "D"
+            }
+          ],
+          "images": [],
+          "correct_answer": "B",
+          "explanation": "Ribosomes are the sites of protein synthesis. They translate messenger RNA (mRNA) into polypeptide chains by linking amino acids together. Mitochondria produce energy (ATP), the Golgi apparatus modifies and packages proteins, and lysosomes handle cellular waste.",
+          "answer": "B"
+        },
+        {
+          "id": 2,
+          "question": "In a chemical reaction, a substance that increases the rate of reaction without being consumed is called a ______.",
+          "choices": [
+            {
+              "choice": "Reactant",
+              "id": "A"
+            },
+            {
+              "choice": "Product",
+              "id": "B"
+            },
+            {
+              "choice": "Catalyst",
+              "id": "C"
+            },
+            {
+              "choice": "Inhibitor",
+              "id": "D"
+            }
+          ],
+          "images": [],
+          "correct_answer": "C",
+          "explanation": "A catalyst lowers the activation energy required for a chemical reaction to occur, thereby increasing the reaction rate without the catalyst itself being permanently changed or used up during the process.",
+          "answer": "A"
+        },
+        {
+          "id": 3,
+          "question": "Which layer of the Earth's atmosphere contains the ozone layer that protects us from UV radiation?",
+          "choices": [
+            {
+              "choice": "Troposphere",
+              "id": "A"
+            },
+            {
+              "choice": "Stratosphere",
+              "id": "B"
+            },
+            {
+              "choice": "Mesosphere",
+              "id": "C"
+            },
+            {
+              "choice": "Thermosphere",
+              "id": "D"
+            }
+          ],
+          "images": [],
+          "correct_answer": "B",
+          "explanation": "The stratosphere contains the ozone layer. Ozone (O3) absorbs the majority of the sun's medium-frequency ultraviolet light, which would otherwise be harmful to most forms of life on Earth.",
+          "answer": null
+        },
+        {
+          "id": 4,
+          "question": "What is the chemical symbol for the element Gold?",
+          "choices": [
+            {
+              "choice": "Ag",
+              "id": "A"
+            },
+            {
+              "choice": "Fe",
+              "id": "B"
+            },
+            {
+              "choice": "Au",
+              "id": "C"
+            },
+            {
+              "choice": "Pb",
+              "id": "D"
+            }
+          ],
+          "images": [],
+          "correct_answer": "C",
+          "explanation": "The symbol Au comes from the Latin word 'aurum', meaning gold. Ag is silver, Fe is iron, and Pb is lead.",
+          "answer": "C"
+        },
+        {
+          "id": 5,
+          "question": "Which of the following is a primary color of light in the additive color model (RGB)?",
+          "choices": [
+            {
+              "choice": "Yellow",
+              "id": "A"
+            },
+            {
+              "choice": "Green",
+              "id": "B"
+            },
+            {
+              "choice": "Cyan",
+              "id": "C"
+            },
+            {
+              "choice": "Magenta",
+              "id": "D"
+            }
+          ],
+          "images": [],
+          "correct_answer": "B",
+          "explanation": "The additive primary colors of light are Red, Green, and Blue (RGB). When combined, they can create white light. Yellow, Cyan, and Magenta are primary colors in the subtractive color model (printing).",
+          "answer": "C"
+        },
+        {
+          "id": 6,
+          "question": "Which part of the human brain is primarily responsible for balance and coordination?",
+          "choices": [
+            {
+              "choice": "Cerebrum",
+              "id": "A"
+            },
+            {
+              "choice": "Brainstem",
+              "id": "B"
+            },
+            {
+              "choice": "Thalamus",
+              "id": "C"
+            },
+            {
+              "choice": "Cerebellum",
+              "id": "D"
+            }
+          ],
+          "images": [],
+          "correct_answer": "D",
+          "explanation": "The cerebellum, located at the back of the skull, coordinates voluntary movements of the muscles to maintain posture, balance, and equilibrium.",
+          "answer": null
+        },
+        {
+          "id": 7,
+          "question": "An atom that has lost or gained electrons and thus carries an electrical charge is called a(n) ______.",
+          "choices": [
+            {
+              "choice": "Isotope",
+              "id": "A"
+            },
+            {
+              "choice": "Ion",
+              "id": "B"
+            },
+            {
+              "choice": "Molecule",
+              "id": "C"
+            },
+            {
+              "choice": "Neutron",
+              "id": "D"
+            }
+          ],
+          "images": [],
+          "correct_answer": "B",
+          "explanation": "An ion is an atom or molecule with a net electric charge due to the loss or gain of one or more electrons. Cations are positively charged, while anions are negatively charged.",
+          "answer": "B"
+        },
+        {
+          "id": 8,
+          "question": "Which of these is the most abundant gas in the Earth's atmosphere?",
+          "choices": [
+            {
+              "choice": "Oxygen",
+              "id": "A"
+            },
+            {
+              "choice": "Carbon Dioxide",
+              "id": "B"
+            },
+            {
+              "choice": "Nitrogen",
+              "id": "C"
+            },
+            {
+              "choice": "Argon",
+              "id": "D"
+            }
+          ],
+          "images": [],
+          "correct_answer": "C",
+          "explanation": "Nitrogen makes up approximately 78% of Earth's atmosphere, followed by oxygen at about 21%.",
+          "answer": "B"
+        },
+        {
+          "id": 9,
+          "question": "According to the laws of thermodynamics, energy cannot be created or destroyed, only transformed. This is the ______ Law.",
+          "choices": [
+            {
+              "choice": "First",
+              "id": "A"
+            },
+            {
+              "choice": "Second",
+              "id": "B"
+            },
+            {
+              "choice": "Third",
+              "id": "C"
+            },
+            {
+              "choice": "Zeroth",
+              "id": "D"
+            }
+          ],
+          "images": [],
+          "correct_answer": "A",
+          "explanation": "The First Law of Thermodynamics is a version of the law of conservation of energy, stating that the total energy of an isolated system is constant.",
+          "answer": "B"
+        },
+        {
+          "id": 10,
+          "question": "Which blood vessel carries oxygenated blood away from the heart to the rest of the body?",
+          "choices": [
+            {
+              "choice": "Vein",
+              "id": "A"
+            },
+            {
+              "choice": "Capillary",
+              "id": "B"
+            },
+            {
+              "choice": "Artery",
+              "id": "C"
+            },
+            {
+              "choice": "Vena Cava",
+              "id": "D"
+            }
+          ],
+          "images": [],
+          "correct_answer": "C",
+          "explanation": "Arteries carry oxygen-rich blood away from the heart (with the exception of the pulmonary artery). Veins generally carry oxygen-poor blood back toward the heart.",
+          "answer": null
+        }
+      ],
+      "instruction": "Select the best answer for each of the following questions."
+    }
+  ],
+  "subject": "General Science",
+  "is_lesson": false,
+  "taken_at": "2026-05-20T15:30:42.728341",
+  "score": 3,
+  "saved": true,
+  "subject_folder": "science"
+}

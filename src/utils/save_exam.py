@@ -7,21 +7,32 @@ from typing import Any, Dict
 from datafetch.exam_model import Exam
 
 
-def get_data_file(exam: Exam):
+def get_filename(exam: Exam):
     """Return the recommended location for the user data file.
 
     We place the file in the project root (two levels up from this file:
-    src/pages/user.py -> project_root/user_data.json). If you prefer another
-    location, change this helper.
+    src/pages/user.py -> project_root/prev_exams/subject_i.json).
     """
+    # 1. Establish the correct, absolute path to the target directory
+    project_root = Path(__file__).resolve().parents[2]
+    target_dir = project_root / "prev_exams"
+
+    # Ensure the directory exists so os.listdir doesn't throw an error
+    target_dir.mkdir(parents=True, exist_ok=True)
+
+    # 2. Find a unique filename
     i = 0
-    filename = exam.subject
+    base_name = exam.subject
+
     while True:
-        if filename not in os.listdir("./prev_exams"):
-            filename = f"{filename}_{i}"
-            break
+        # Create the candidate filename for this iteration
+        candidate_name = f"{base_name}_{i}.json" if i > 0 else f"{base_name}.json"
+
+        # Check if this specific file already exists in the folder
+        if candidate_name not in os.listdir(target_dir):
+            return target_dir / candidate_name
+
         i += 1
-    return Path(__file__).resolve().parents[2] / "prev_exams" / f"{filename}.json"
 
 
 def _atomic_write(path: Path, data: Dict[str, Any]) -> None:
@@ -40,5 +51,18 @@ def _atomic_write(path: Path, data: Dict[str, Any]) -> None:
 
 
 def save_exam(exam):
-    filename = get_data_file(exam)
+    exam.saved = True
+    print("Initiated saving exam...")
+    filename = get_filename(exam)
+    print("Found a good filename:", filename)
     _atomic_write(filename, exam.model_dump())
+    print("Successfully saved it")
+
+
+def get_exam(exam_name):
+    with open(f"./prev_exams/{exam_name}", "r") as f:
+        return Exam(**json.load(f))
+
+
+def get_exam_files():
+    return os.listdir("./prev_exams/")

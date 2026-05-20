@@ -94,7 +94,7 @@ def get_exam_from_ai(questions, subject):
                 "\n5. Put the data of the image in the 'images' key where it was referenced."
                 "\n6. You may not create any new image. Only use the provided ones and use the same name used in the question."
                 "\n7. You must use the same name for the image used in the question, you may not use the image data itself."
-                "\n8. Strictly, do not use emojis."
+                "\n8. Strictly, do not use emojis, no matter how important it is."
             ),
             "images": image_list,  # Ensure your Ollama client supports the 'images' key here
         },
@@ -113,6 +113,7 @@ def get_exam_from_ai(questions, subject):
             raw_content = response.message.content
             final_exam = Exam.model_validate_json(fix_content(raw_content))
             final_exam.add_images(formatted_images)
+            final_exam.subject_folder = subject.lower()
             print(f"Successfully generated {len(final_exam.types)} questions.")
         except Exception as e:
             print(f"Error in generating exam: {e}. Retrying...")
@@ -138,17 +139,18 @@ def fix_content(content: str) -> str:
     return content
 
 
-def explain_exam(exam: List[QuestionList]):
+def explain_exam(exam: Exam):
     # Remove images
     # for question in exam: # TODO: Remove images before going into Gemini, then return it like from get_exam_from_ai
     #     if question.get("images", []):
     #         question["images"] = list(question["images"].keys())
     images = {}
-    for question_list in exam:
-        print(question_list)
-        if question_list.has_images():
-            images.update(question_list.get_images())
-            question_list.remove_images()
+    question_lists = exam.types
+    for question_lists in question_lists:
+        print(question_lists)
+        if question_lists.has_images():
+            images.update(question_lists.get_images())
+            question_lists.remove_images()
 
     client = Client()
     messages = [
@@ -168,7 +170,7 @@ def explain_exam(exam: List[QuestionList]):
         {
             "role": "user",
             "content": (
-                f"### EXAM DATA:\n{json.dumps([question_list.model_dump() for question_list in exam])}\n\n"
+                f"### EXAM DATA:\n{exam.model_dump()}\n\n"
                 "### SUPPLEMENTAL DATA:\n"
                 "- Use context from history data.\n"
                 "- Incorporate provided mnemonics as technical memory aids.\n\n"
@@ -201,6 +203,7 @@ def explain_exam(exam: List[QuestionList]):
             raw_content = response.message.content
             final_lesson = Lesson.model_validate_json(fix_content(raw_content))
             final_lesson.add_images(images)
+            final_lesson.similar_exam.subject_folder = exam.subject_folder
 
         except Exception as e:
             print(f"Error in explaining exam: {e}. Retrying...")

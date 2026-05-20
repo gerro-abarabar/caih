@@ -5,6 +5,7 @@ import streamlit as st
 
 from datafetch.exam_model import QuestionList
 from utils.save_exam import save_exam
+from utils.user_data import evolve_subject_progress, increment_exams_taken
 
 st.set_page_config(layout="wide")
 
@@ -180,7 +181,7 @@ def print_exam(exam: List[QuestionList], is_all=False):
                             st.rerun()
         if not EXAM.is_lesson:
             if st.button("Create a new lesson"):
-                create_lesson(exam)
+                create_lesson(EXAM)
         elif EXAM.is_lesson:  # if it is a lesson
             print("This is a lesson")
             if asked_better_explanation:
@@ -295,7 +296,18 @@ else:
     print_exam(EXAM.types)
 
 if st.button("Go Home"):
+    st.session_state.logged = False
     st.switch_page("main.py")
-if st.button("Save Exam"):
-    save_exam(EXAM)
-    st.success("Successfully saved exam.")
+
+if not EXAM.saved:
+    if st.button("Save Exam"):
+        save_exam(EXAM)
+        st.success("Successfully saved exam.")
+
+if not st.session_state.get(
+    "logged", False
+):  # If it is new, (not saved, and not a lesson) and it hasnt been logged, then add it to our user data
+    evolve_subject_progress(st.session_state.user_data, EXAM.subject_folder, score)
+    st.session_state.logged = True
+    print(f"saved score: {score}. to our levels")
+    increment_exams_taken(st.session_state.user_data)

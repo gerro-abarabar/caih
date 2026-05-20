@@ -14,6 +14,9 @@ This project needs to be able to do the following:
 - [x] Timer
 - [x] Flashcard function
 - [ ] Make the flashcards look better
+- [ ] A server for hosting public reviewers
+- [ ] Global chat in the server for asking questions and sharing reviewers
+- [ ] Open up saved exams
 
 # Contribute (for students)
 
