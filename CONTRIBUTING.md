@@ -3,7 +3,7 @@
 This project needs to be able to do the following:
 
 - [x] Create reviewers according to mistakes
-- [ ] (If possible) scoring system
+- [x] (If possible) scoring system
 - [ ] Self-evaluating phase
   - It can evaluate your weakness and tell what you're missing out on
   - May use an embedding system to find lessons that are similar to your weaknesses
@@ -13,10 +13,10 @@ This project needs to be able to do the following:
 - [x] Ask questions according to problem
 - [x] Timer
 - [x] Flashcard function
-- [ ] Make the flashcards look better
+- [x] Make the flashcards look better
 - [ ] A server for hosting public reviewers
 - [ ] Global chat in the server for asking questions and sharing reviewers
-- [ ] Open up saved exams
+- [x] Open up saved exams
 
 # Contribute (for students)
 

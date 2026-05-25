@@ -1,6 +1,5 @@
 import json
 import os
-import re
 from math import ceil
 from random import choice, randint
 from time import sleep
@@ -8,7 +7,7 @@ from typing import List
 
 from ollama import Client
 
-from .exam_model import Exam, Question, QuestionList
+from .exam_model import Exam, Question
 from .explanation_model import Lesson
 
 
