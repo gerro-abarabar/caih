@@ -18,7 +18,9 @@
     "subjects": {
       "science": 13,
       "mathematics": 3
-    }
+    },
+    "science": 0,
+    "mathematics": 0
   },
   "meta": {
     "created_by": "src/pages/user.py",
