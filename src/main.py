@@ -1,15 +1,10 @@
 # marker_single assets/language-profeciency-example.pdf --output_format json --ollama_base_url http://localhost:11434 --ollama_model gemini-3-flash-preview:cloud --llm_service=marker.services.ollama.OllamaService --output_dir language-profeciency-example.md --force_ocr --debug --disable_image_extraction
 
-import json
 import os
-import tempfile
-from pathlib import Path
-from typing import Any, Dict
 
 import streamlit as st
 
 from datafetch import DataFetcher
-from src.utils import initiate_exam
 from utils.flashcards import get_flashcard_topics, get_flashcards
 from utils.initiate_exam import initate_exam
 from utils.save_exam import get_exam, get_exam_files

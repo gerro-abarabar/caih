@@ -49,8 +49,7 @@ st.write("---")
 
 col1, col2, col3 = st.columns(3)
 with col1:
-    try_exam = st.button("Try the Exam")  # TODO: add functionality to this
-    # TODO: Automatically turn on the 'saved' attribute of the exam
+    try_exam = st.button("Try the Exam")
 with col2:
     if not lesson.saved:
         if st.button("Save Lesson"):
@@ -65,6 +64,7 @@ if go_home:
 
 if try_exam:
     initate_exam()
+    lesson.similar_exam.saved = True
     st.session_state.exam = lesson.similar_exam
     st.switch_page("pages/exam.py")
 

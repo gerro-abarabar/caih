@@ -139,10 +139,6 @@ def fix_content(content: str) -> str:
 
 
 def explain_exam(exam: Exam):
-    # Remove images
-    # for question in exam: # TODO: Remove images before going into Gemini, then return it like from get_exam_from_ai
-    #     if question.get("images", []):
-    #         question["images"] = list(question["images"].keys())
     images = {}
     question_lists = exam.types
     for question_lists in question_lists:
