@@ -59,7 +59,7 @@ else:
     labels = ["Correct", "Wrong"]
     sizes = [st.session_state.score, len(flashcards) - st.session_state.score]
     theme = st_theme()
-    plt.style.use("dark_background") if theme["base"] == "dark" else 0
+    plt.style.use("dark_background") if theme["base"] == "dark" else 0  # pyright: ignore[reportOptionalSubscript]
     fig, ax = plt.subplots()
     ax.pie(sizes, labels=labels, autopct="%1.1f%%", startangle=90)
     ax.axis("equal")  # Ensures the pie is drawn as a circle

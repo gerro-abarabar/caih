@@ -1,6 +1,7 @@
 # This file creates explanations for the json that hadn't got a explanation
 import json
 import os
+import socket
 import struct
 import time
 from concurrent.futures import ThreadPoolExecutor
@@ -61,7 +62,7 @@ def ask_llm(question):
             response = client.chat(
                 model_used, messages=[{"role": "user", "content": message}]
             )
-            content = response.message.content.strip("`")
+            content = response.message.content.strip("`")  # pyright: ignore[reportOptionalMemberAccess]
             if content:
                 return content
 
@@ -70,8 +71,6 @@ def ask_llm(question):
             time.sleep(randint(5, 10))
         return "No explanation available after multiple attempts."
 
-
-import socket
 
 host = "0.0.0.0"
 port = 45612
@@ -102,7 +101,7 @@ def wait_until_complete(batch=10, original_images: dict = {}):
     while len(data) < batch:
         conn, address = server_socket.accept()
 
-        new_data = json.loads(get_full_data(conn))
+        new_data = json.loads(get_full_data(conn))  # pyright: ignore[reportArgumentType]
         # data must be a json
         if new_data.get("images"):
             new_images = {}
@@ -162,6 +161,9 @@ def process_question(model, question):
             # Short timeout for the ack
             s.settimeout(5.0)
             ack = s.recv(1024).decode()
+            if ack != "Message Received":
+                print(f"Unexpected acknowledgment: {ack}")
+                return False
             return True
     except Exception as e:
         print(f"Failed to process/send question: {e}")
