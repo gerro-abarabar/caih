@@ -26,7 +26,15 @@ else
     echo "[✓] Ollama is already installed."
 fi
 
-echo "[+] Pulling Gemma 4 Cloud model..."
+echo "[+] Checking Ollama Cloud authentication..."
+if ! ollama list &> /dev/null; then
+    echo "[!] An Ollama account is required to use cloud models."
+    echo "[!] Opening your browser... please sign in or create a free account."
+    read -p "Press [Enter] to open the login page..."
+    ollama signin
+fi
+
+echo "[+] Downloading the Gemma 4 Cloud model..."
 ollama pull gemma4:31b-cloud
 
 echo "[+] Installing Python libraries..."

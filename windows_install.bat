@@ -28,6 +28,15 @@ if %errorlevel% neq 0 (
     echo [✓] Ollama is already installed.
 )
 
+echo [+] Checking Ollama Cloud authentication...
+ollama list >nul 2>&1
+if %errorlevel% neq 0 (
+    echo [!] You need to log in to your Ollama account to use cloud models.
+    echo [!] A browser window will now open. Please sign in or create a free account.
+    pause
+    ollama signin
+)
+
 echo [+] Downloading the Gemma 4 Cloud model...
 ollama pull gemma4:31b-cloud
 
