@@ -5,16 +5,21 @@ It is a tool designed to help college exam takers to prepare for their College A
 
 This tool is made specifically for Philippine Colleges (e.g. UP, UST, DLSU) Admission Tests so that students can effectively study at their own local machine. 
 
-## How to run it
+## How to install
+### Windows:
+1. Download the source from the [releases](https://github.com/gerro-abarabar/caih/releases/) and extract it.
+2. Run [`windows_install.bat`](./windows_install.bat) with administrator.
+2. Let it run, and it's complete
 
-1. You need to download and install [Python](https://www.python.org/downloads/) (3.12 or higher)
-2. Download the source code by clicking: `Code > Download Zip` or `git clone https://github.com/gerro-abarabar/caih.git` in your terminal
-3. Install the required libraries by doing `pip install -r requirements.txt` or `pip3 install -r requirements.txt` if you're in Mac or Linux
-4. Install [Ollama](https://ollama.com/).
-5. Pull the cloud models by doing `ollama pull gemma4:31b-cloud`
-6. Run the program by doing `streamlit run src/main.py`.
-7. Enjoy studying!
+### Mac:
+1. Download the source from the [releases](https://github.com/gerro-abarabar/caih/releases/) and extract it.
+2. Run [`mac_install.sh`](./mac_install.sh) with administrator.
+2. Let it run, and it's complete
 
+### Linux:
+1. Download the source from the [releases](https://github.com/gerro-abarabar/caih/releases/)
+2. Make [`linux_install.sh`](./linux_install.sh) executable by running `chmod +x linux_install.sh`.
+3. Run the installer `./linux_install.sh`
 
 ## Contributing
 We need your help to improve this small project by adding more reviewers.
