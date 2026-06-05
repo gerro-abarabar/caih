@@ -5,7 +5,19 @@ It is a tool designed to help college exam takers to prepare for their College A
 
 This tool is made specifically for Philippine Colleges (e.g. UP, UST, DLSU) Admission Tests so that students can effectively study at their own local machine. 
 
-## How to install
+## How to Run
+Follow the instructions in [installation guide](#installation)
+
+### Windows:
+Run `run.bat` and enjoy.
+
+### Mac:
+Double click `run.command` and enjoy.
+
+### Linux:
+Run `run.sh` in your terminal and enjoy.
+
+## Installation
 ### Windows:
 1. Download the source from the [releases](https://github.com/gerro-abarabar/caih/releases/) and extract it.
 2. Run [`windows_install.bat`](./windows_install.bat) with administrator.
