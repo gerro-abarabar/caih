@@ -1,5 +1,7 @@
-ollama==0.6.1
-pydantic==2.13.1
+matplotlib==3.10.9
+ollama==0.6.2
+pydantic==2.13.4
 python-dotenv==1.2.2
-Requests==2.33.1
-streamlit==1.55.0
+Requests==2.34.2
+streamlit==1.58.0
+streamlit_theme==0.58.0
