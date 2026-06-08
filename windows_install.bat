@@ -2,7 +2,7 @@
 :: Ensure admin rights
 net session >nul 2>&1
 if %errorLevel% neq 0 (
-    echo [!] Please right-click this file and select "Run as Administrator".
+    echo [!] Please right-click this file and select "Run as Administrator"
     pause
     exit /b
 )
@@ -16,8 +16,7 @@ if %errorlevel% neq 0 (
     winget install Python.Python.3.12 --silent --accept-source-agreements --accept-package-agreements
 
     :: Force the script to see the new Python path immediately without restarting cmd
-    set "PATH=%PATH%;C:\Program Files\Python312\;C:\Program Files\Python312\Scripts\"
-    set "PATH=%PATH%;%USERPROFILE%\AppData\Local\Programs\Python\Python312\;%USERPROFILE%\AppData\Local\Programs\Python\Python312\Scripts\"
+    refreshenv >nul 2>nul || set "PATH=%PATH%;C:\Program Files\Python312\;C:\Program Files\Python312\Scripts\"
 ) else (
     echo [✓] Real Python is already installed.
 )
@@ -27,7 +26,7 @@ where ollama >nul 2>nul
 if %errorlevel% neq 0 (
     winget install Ollama.Ollama --silent --accept-source-agreements --accept-package-agreements
     echo [+] Launching Ollama background service...
-    start "" "ollama serve"
+    ollama serve
     timeout /t 5 >nul
 ) else (
     echo [✓] Ollama is already installed.
@@ -36,6 +35,7 @@ if %errorlevel% neq 0 (
 :: Force the script to run from its own folder directory
 cd /d "%~dp0"
 
+: checking
 echo [+] Verifying Cloud Account Status...
 python src/check_ollama.py
 if %errorlevel% neq 0 (
@@ -45,8 +45,10 @@ if %errorlevel% neq 0 (
     echo.
     pause
     ollama signin
-    echo [+] Account synced! Proceeding...
+    goto checking
+
 )
+echo [+] Account synced! Proceeding...
 
 echo [+] Downloading the Gemma 4 Cloud model...
 ollama pull gemma4:31b-cloud
