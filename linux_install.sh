@@ -22,12 +22,15 @@ else
     echo "[✓] Ollama is already installed."
 fi
 
-echo "[+] Checking Ollama Cloud authentication..."
-if ! ollama list &> /dev/null; then
-    echo "[!] An Ollama account is required to use cloud models."
-    echo "[!] Opening your browser... please sign in or create a free account."
-    read -p "Press [Enter] to open the login page..."
+echo "[+] Verifying Cloud Account Status..."
+if ! python3 check_auth.py; then
+    echo ""
+    echo "[!] ALERT: An Ollama account is REQUIRED to execute Cloud Models."
+    echo "[!] Opening your default browser... please sign in or register."
+    echo ""
+    read -p "Press [Enter] to launch the browser connection portal..."
     ollama signin
+    sleep 3
 fi
 
 echo "[+] Downloading the Gemma 4 Cloud model..."

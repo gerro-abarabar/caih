@@ -7,14 +7,19 @@ if %errorLevel% neq 0 (
     exit /b
 )
 
-echo [+] Checking and Installing Python via WinGet...
-where python >nul 2>nul
+echo [+] Checking for a REAL Python installation...
+:: Check if python runs and returns a valid version string
+python --version >nul 2>&1
 if %errorlevel% neq 0 (
+    echo [!] Real Python not found (or caught the Microsoft Store alias).
+    echo [+] Installing Python 3.12 via WinGet...
     winget install Python.Python.3.12 --silent --accept-source-agreements --accept-package-agreements
-    :: Refresh path variables immediately without requiring a restart
-    refreshenv >nul 2>nul || set "PATH=%PATH%;C:\Program Files\Python312\;C:\Program Files\Python312\Scripts\"
+
+    :: Force the script to see the new Python path immediately without restarting cmd
+    set "PATH=%PATH%;C:\Program Files\Python312\;C:\Program Files\Python312\Scripts\"
+    set "PATH=%PATH%;%USERPROFILE%\AppData\Local\Programs\Python\Python312\;%USERPROFILE%\AppData\Local\Programs\Python\Python312\Scripts\"
 ) else (
-    echo [✓] Python is already installed.
+    echo [✓] Real Python is already installed.
 )
 
 echo [+] Checking and Installing Ollama...
@@ -28,21 +33,30 @@ if %errorlevel% neq 0 (
     echo [✓] Ollama is already installed.
 )
 
-echo [+] Checking Ollama Cloud authentication...
-ollama list >nul 2>&1
+:: Force the script to run from its own folder directory
+cd /d "%~dp0"
+
+echo [+] Verifying Cloud Account Status...
+python src/check_ollama.py
 if %errorlevel% neq 0 (
-    echo [!] You need to log in to your Ollama account to use cloud models.
-    echo [!] A browser window will now open. Please sign in or create a free account.
+    echo.
+    echo [!] ALERT: An Ollama account is REQUIRED to execute Cloud Models.
+    echo [!] Opening your default browser... please sign in or register.
+    echo.
     pause
     ollama signin
+    echo [+] Account synced! Proceeding...
 )
 
 echo [+] Downloading the Gemma 4 Cloud model...
 ollama pull gemma4:31b-cloud
 
+
+
 echo [+] Installing Python libraries...
-pip install -r requirements.txt
+:: Using 'python -m pip' ensures we use the exact Python we just checked/installed
+python -m pip install -r requirements.txt
 
 echo [+] Setup complete! Launching CAIH...
-streamlit run src/main.py
+python -m streamlit run src/main.py
 pause
