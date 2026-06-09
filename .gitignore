@@ -9,3 +9,4 @@ src/test.py
 
 flashcards/
 saved_lessons/*
+user_data.json
