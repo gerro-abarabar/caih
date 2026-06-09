@@ -65,6 +65,14 @@ else:
     ax.axis("equal")  # Ensures the pie is drawn as a circle
 
     st.pyplot(fig)
+    if st.button("Save to Anki"):
+        flashcards_anki = ""
+        for flashcard in flashcards:
+            flashcards_anki += f"{flashcard.question}\t{flashcard.answer}\n"
+        file_name = f"{flashcards_set.topic}_flashcards.txt"
+        with open(file_name, "w") as f:
+            f.write(flashcards_anki)
+        st.success(f"Flashcards saved as {file_name} for Anki import!")
 
     if st.button("Go home"):
         st.session_state.score = 0
