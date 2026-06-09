@@ -1,7 +1,7 @@
 # Pydantic Model of what the AI must follow
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Image(BaseModel):
@@ -21,7 +21,20 @@ class Question(BaseModel):
     choices: List[Choice]
     images: List[Image]
     correct_answer: str
-    explanation: str
+    # IM SO DESPERATE TO MAKE IT BETTER
+    explanation: str = Field(
+        ...,
+        description=(
+            "An extremely detailed, multi-paragraph pedagogical explanation formatted with rich Markdown and LaTeX. "
+            "You MUST use headers (###, ####), bolding, bullet points, and horizontal rules (---) for distinct sections. "
+            "All mathematical expressions, formulas, and variables must be wrapped in standard inline LaTeX ($...$) "
+            "or standalone block LaTeX ($$...$$). Do not use plain text for math. "
+            "Tailor the content to the subject: "
+            "For STEM/Math: Include '#### 1. FUNDAMENTAL PRINCIPLE', '#### 2. STEP-BY-STEP DERIVATION', and '#### 3. THE EXAM HACK'. "
+            "For Language: Include '#### 1. KEYWORD ANALYSIS', '#### 2. LOGICAL JUSTIFICATION', and '#### 3. DISTRACTOR DECONSTRUCTION'. "
+            "For General Knowledge: Include '#### 1. HISTORICAL/SCIENTIFIC CONTEXT', '#### 2. CONCEPTUAL MAPPING', and '#### 3. MEMORY ANCHOR'."
+        ),
+    )
     answer: Optional[str] = None
 
     def add_answer(self, answer: str):

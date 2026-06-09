@@ -10,10 +10,11 @@ from ollama import Client
 from .exam_model import Exam, Question
 from .explanation_model import Lesson
 
+MODEL = "gemma4:31b-cloud"  # Model can be changed manually here
+
 
 def load_exam(file_path="assets", subject=""):
     path = os.path.join(file_path, subject.lower())
-    # Ensure directory exists to avoid infinite loops
     if not os.path.exists(path):
         os.makedirs(path)
 
@@ -27,11 +28,8 @@ def load_exam(file_path="assets", subject=""):
 
 
 def get_random_cuts(questions) -> list[int]:
-    """
-    Returns a list of random numbers that add up to the number of questions
-    """
     cuts: list[int] = []
-    max_cuts = ceil(questions / 3)  # Cut into three parts
+    max_cuts = ceil(questions / 3)
     while sum(cuts) < questions:
         cut = randint(1, max_cuts)
         cuts.append(cut)
@@ -41,33 +39,26 @@ def get_random_cuts(questions) -> list[int]:
 def get_exam_from_ai(questions, subject):
     client = Client()
     cuts = get_random_cuts(questions)
-    example_json = []  # The example the AI must referenec
-    image_list = []  # used for giving the AI the image
-    formatted_images = {}  # Used to retrieve the image by assigning names
+    example_json = []
+    image_list = []
+    formatted_images = {}
     for cut in cuts:
         exam_json = load_exam(subject=subject)
         start_number = randint(0, len(exam_json) - cut - 1)
         exam = exam_json[start_number : start_number + cut]
-        if any(
-            "images" in question for question in exam
-        ):  # Imports the image if it exists and removes it to save space
+        if any("images" in question for question in exam):
             for question in exam:
                 if question.get("images", []):
-                    # This gets the dict of images
                     images = question.get("images")
-
-                    # Replace the images with their names
                     question["images"] = list(images.keys())
-
-                    # Adds to the list of used images
                     image_list.append(*images.values())
                     formatted_images.update(images)
                     print(type(question.get("images")))
         example_json.append(exam)
     print(cuts)
-    # We only need a slice for context
-    # print(example_json)
-    # print(json.dumps(example_json))
+
+    # Double braces safely escape unexpanded brackets for python f-strings
+    formatted_example = json.dumps(example_json).replace("{", "{{").replace("}", "}}")
 
     messages = [
         {
@@ -84,7 +75,7 @@ def get_exam_from_ai(questions, subject):
             "content": (
                 f"Generate an 'Exam' object containing {questions} new questions. "
                 f"\n\n### SCHEMA CONSTRAINTS:\n{Exam.model_json_schema()}"
-                f"\n\n### REFERENCE EXAMPLE:\n{json.dumps(example_json)}"  # FIXME: Problem with Json things
+                f"\n\n### REFERENCE EXAMPLE:\n{formatted_example}"
                 "\n\n### STRICT RULES:"
                 "\n1. The 'id' must start at 1 and increment sequentially."
                 "\n2. 'correct_answer' must be the choice id of the correct answer."
@@ -95,57 +86,48 @@ def get_exam_from_ai(questions, subject):
                 "\n7. You must use the same name for the image used in the question, you may not use the image data itself."
                 "\n8. Strictly, do not use emojis, no matter how important it is."
             ),
-            "images": image_list,  # Ensure your Ollama client supports the 'images' key here
+            "images": image_list,
         },
-    ]  # Thanks Gemini.
-    while True:  # Infinite Loop in case AI make mistakes
+    ]
+    while True:
         final_exam = None
-        # Using Gemini 3 Flash for high reliability
         try:
             print("Trying to generate questions...")
+            final_response = ""
             response = client.chat(
-                "gemma4:31b-cloud",
+                MODEL,
                 messages=messages,
-                stream=False,
                 format=Exam.model_json_schema(),
+                stream=True,
+                options={"temperature": 0.2},
             )
-            raw_content = response.message.content
-            final_exam = Exam.model_validate_json(fix_content(raw_content))
+            for chunk in response:
+                message = chunk.message.content
+                final_response += message  # pyright: ignore[reportOperatorIssue]
+                print(message, end="", flush=True)
+
+            # Pydantic native validation parses pristine escaped JSON structures perfectly
+            final_exam = Exam.model_validate_json(final_response)
             final_exam.add_images(formatted_images)
             final_exam.subject_folder = subject.lower()
-            print(f"Successfully generated {len(final_exam.types)} questions.")
+            print(f"\nSuccessfully generated {len(final_exam.types)} question types.")
         except Exception as e:
-            print(f"Error in generating exam: {e}. Retrying...")
+            print(f"\nError in generating exam: {e}. Retrying...")
             final_exam = None
-            sleep(2)  # To avoid rate limits
+            sleep(2)
         if final_exam:
             break
 
     return final_exam
 
 
-def fix_content(content: str) -> str:
-    """Fixes the error of something like:
-        Invalid JSON: invalid escape at line 109 column 84 [type=json_invalid, input_value='{\n  "subject": "Mathema...n      ]\n    }\n  ]\n}', input_type=str]
-    Fixes it by changing the \n to \\n, and also changing the ]\n and }\n to ]\\n and }\\n so that it can be properly parsed by the JSON parser.
-    """
-    # Unescape newlines
-    content = content.replace("\\n", "\n")
-    # Fix the list new line
-    content = content.replace("]\\n", "]\n")
-    # Fix the set new line
-    content = content.replace("}\\n", "}\n")
-    return content
-
-
 def explain_exam(exam: Exam):
     images = {}
     question_lists = exam.types
-    for question_lists in question_lists:
-        print(question_lists)
-        if question_lists.has_images():
-            images.update(question_lists.get_images())
-            question_lists.remove_images()
+    for q_list in question_lists:
+        if q_list.has_images():
+            images.update(q_list.get_images())
+            q_list.remove_images()
 
     client = Client()
     messages = [
@@ -153,13 +135,13 @@ def explain_exam(exam: Exam):
             "role": "system",
             "content": (
                 "You are a master educator specializing in academic recovery and curriculum design. "
-                "Your goal is to convert exam errors into structured, objective study notes. "
+                "Your goal is to convert exam errors into structured, comprehensive, and exhaustive study notes. "
                 "Follow these structural principles:\n"
                 "1. Logical Mapping: Identify the specific principle violated in each incorrect answer.\n"
                 "2. Objective Rectification: Provide a direct, factual bridge between the error and the correct concept.\n"
                 "3. Systematic Organization: Present information in a clear, hierarchical format suitable for high-school level review.\n"
                 "4. Multi-Modal Synthesis: Integrate visual data from provided images into the logical explanations.\n\n"
-                "Output must be strictly raw JSON matching the provided schema."
+                "Output must be strictly raw JSON matching the provided schema. Internal string newlines must be escaped as '\\n'."
             ),
         },
         {
@@ -171,39 +153,47 @@ def explain_exam(exam: Exam):
                 "- Incorporate provided mnemonics as technical memory aids.\n\n"
                 "### TASK:\n"
                 "1. Analyze the exam questions and images to identify core conceptual gaps.\n"
-                "2. Formulate a 'core_explanation' that focuses on the objective logic and facts missed by the student.\n"
-                "3. Generate a 'similar_exam' with at least 3 new questions that rigorously test the same underlying principles.\n\n"
+                "2. Formulate an exhaustive, deep-dive 'core_explanation' utilizing rich Markdown headers and rigorous LaTeX mathematical symbols for all formulas/equations.\n"
+                "3. Generate AT LEAST 10 completely unique study flashcards in the 'memory_aids' list.\n"
+                "4. Generate a 'similar_exam' containing AT LEAST 10 highly rigorous new questions testing these exact concepts.\n\n"
                 f"### SCHEMA:\n{Lesson.model_json_schema()}\n\n"
-                "### CONSTRAINTS:\n"
-                "- Do not use markdown backticks (```json).\n"
+                "### STRICTOR CONSTRAINTS:\n"
+                "- Do not use markdown backticks (```json) outside the JSON structure.\n"
                 "- Maintain an objective, academic tone; avoid conversational or entertaining fillers.\n"
-                "- Ensure the 'similar_exam' focuses on practical application of the concepts.\n"
-                "- Ensure the JSON is valid and mirrors the internal logic of the missed questions.\n"
+                "- Every question in 'similar_exam' must have its own detailed markdown/LaTeX 'explanation' string matching your STEM/Verbal styles.\n"
                 "- Strictly, do not use emojis."
             ),
-            "images": images.values(),
+            "images": list(images.values()),
         },
     ]
-    while True:  # Infinite Loop in case AI make mistakes
+    while True:
         final_lesson = None
-        # Using Gemini 3 Flash for high reliability
         try:
             print("Trying to generate lesson...")
             response = client.chat(
-                "gemma4:31b-cloud",
+                MODEL,
                 messages=messages,
-                stream=False,
+                stream=True,
                 format=Lesson.model_json_schema(),
+                options={
+                    "temperature": 0.2,
+                    "num_predict": 8192,
+                },  # Added token runway for long lessons
             )
-            raw_content = response.message.content
-            final_lesson = Lesson.model_validate_json(fix_content(raw_content))
+            final_response = ""
+            for chunk in response:
+                message = chunk.message.content
+                final_response += message  # FIXED: Now properly appends chunk strings  # pyright: ignore[reportOperatorIssue]
+                print(message, end="", flush=True)
+
+            final_lesson = Lesson.model_validate_json(final_response)
             final_lesson.add_images(images)
             final_lesson.similar_exam.subject_folder = exam.subject_folder
-
+            print("\nSuccessfully generated lesson.")
         except Exception as e:
-            print(f"Error in explaining exam: {e}. Retrying...")
+            print(f"\nError in explaining exam: {e}. Retrying...")
             final_lesson = None
-            sleep(2)  # To avoid rate limits
+            sleep(2)
         if final_lesson:
             break
     return final_lesson
@@ -240,10 +230,10 @@ def remake_explanation(question: Question):
         },
     ]
     response = client.chat(
-        "gemma4:31b-cloud",
+        MODEL,
         messages=messages,
         stream=False,
-        format=Lesson.model_json_schema(),
+        options={"temperature": 0.2},
     )
     return response.message.content
 
@@ -253,9 +243,12 @@ def chat_with_ai(messages: List[dict]):
     while True:
         try:
             response = client.chat(
-                "gemma4:31b-cloud",
+                MODEL,
                 messages=messages,
                 stream=True,
+                options={
+                    "temperature": 0.2  # Low temperature keeps it strict and adherent to the schema
+                },
             )
             return response
         except Exception as e:
@@ -268,8 +261,8 @@ if __name__ == "__main__":
     try:
         new_exam = get_exam_from_ai(questions=5, subject="mathematics")
         # print(f"Successfully generated {len([*question_list.questions for question_list in new_exam.types])} questions.") # Dont use this, this gives an error
-        new_explanation = explain_exam(new_exam.types)
-        print(f"Successfully generated explanation.")
+        new_explanation = explain_exam(new_exam)
+        print("Successfully generated explanation.")
         print(new_explanation)
 
         # print(json.dumps(new_exam[0], indent=2))

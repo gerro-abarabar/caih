@@ -267,6 +267,9 @@ else:
         wrong_questions.append(copy.deepcopy(page))
         # print("Un answered",unanswered_questions)
         # print(f"{CHOICES=}")
+
+        if CHOICES.get(str(i)) is None:
+            continue
         for question, answer in CHOICES.get(
             str(i), []
         ).values():  # ( Question, Answer )

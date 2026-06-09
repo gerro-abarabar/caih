@@ -142,7 +142,6 @@ if st.session_state.question_type >= len(exam.types):
 # INVISIBLE DATA
 
 for button_key in st.session_state.selected_buttons.values():
-    print("Selected button:", button_key)
     st.markdown(
         f"""
         <style>

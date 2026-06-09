@@ -5,8 +5,7 @@
 .env
 src/test.py
 .obsidian/
-
-
-flashcards/
+flashcards/*
 saved_lessons/*
 user_data.json
+prev_exams/*

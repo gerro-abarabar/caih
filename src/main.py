@@ -9,6 +9,7 @@ from utils.flashcards import get_flashcard_topics, get_flashcards
 from utils.initiate_exam import initate_exam
 from utils.save_exam import get_exam, get_exam_files
 from utils.user_data import get_data_file, load_user_data, save_user_data
+from utils.ver_checker import get_latest_version
 
 st.set_page_config(page_title="Exam Generator")
 SUBJECTS = [
@@ -27,6 +28,12 @@ user_data = load_user_data(DATA_FILE)
 st.session_state.user_data = (
     user_data  # Store in session state for easy access across pages
 )
+latest_version = get_latest_version()
+current_version = user_data.get("version", "0.0.0")
+if latest_version != current_version:
+    st.warning(
+        f"A new version of the app is available! You are on version {current_version}, and the latest version is {latest_version}. Please update to get the best experience."
+    )
 
 progress_data = user_data.get("progress", {})
 for subject in progress_data.get("subjects", []):

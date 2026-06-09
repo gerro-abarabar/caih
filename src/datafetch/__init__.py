@@ -3,7 +3,7 @@ import os
 from json import dump, dumps
 from typing import List
 
-from datafetch.exam_model import Question, QuestionList
+from datafetch.exam_model import Exam, Question, QuestionList
 from datafetch.explanation_model import Lesson
 
 from .prompting import chat_with_ai, explain_exam, get_exam_from_ai, remake_explanation
@@ -18,7 +18,7 @@ class DataFetcher:
     def fetch_exam(self, questions=5, subject=""):
         return get_exam_from_ai(questions=questions, subject=subject)
 
-    def create_lesson(self, exam: List[QuestionList]):
+    def create_lesson(self, exam: Exam):
         return explain_exam(exam)
 
     def save_lesson(self, lesson: Lesson, lesson_name: str = ""):

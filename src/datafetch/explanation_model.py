@@ -8,35 +8,52 @@ from .exam_model import Exam, Image
 
 
 class Mnemonic(BaseModel):
-    tool: str = Field(..., description="The acronym, rhyme, or memory trick.")
+    tool: str = Field(
+        ..., description="The acronym, rhyme, or memory trick (e.g., SOH CAH TOA)."
+    )
     application: str = Field(
-        ..., description="How to apply this trick to the specific concept."
+        ...,
+        description="A comprehensive, rich-text markdown explanation of how to apply this trick to the specific concept.",
     )
     images: List[Image] = Field(
-        ...,
-        description="Images associated with the lesson. Remember to use the same name as the given data.",
+        ..., description="Images associated with the flashcard."
     )
 
 
 class Lesson(BaseModel):
-    topic_title: str = Field(..., description="A concise title for the lesson.")
+    topic_title: str = Field(
+        ...,
+        description="A clear, comprehensive title for the academic recovery lesson.",
+    )
+
+    # ENFORCE DEEP FORMATTING HERE
     core_explanation: str = Field(
         ...,
-        description="A detailed breakdown of the logic and why the correct answer is right.",
+        description=(
+            "An extremely thorough, textbook-style deep dive into the logic, rules, and fundamental principles. "
+            "You MUST use extensive rich Markdown formatting (Headers ###, ####, bullet points, bolding, and horizontal rules `---`). "
+            "All mathematical derivations, formulas, and expressions MUST be typeset using inline LaTeX ($...$) or block LaTeX ($$...$$). "
+            "Do not write flat walls of plain text."
+        ),
     )
+
     historical_context: str = Field(
-        ..., description="The background, origin, or 'story' behind this concept."
+        ...,
+        description="The background, evolutionary origin, or historical development behind this concept.",
     )
+
+    # ENFORCE THE 10 FLASHCARD MINIMUM HERE
     memory_aids: List[Mnemonic] = Field(
-        ..., description="A list of mnemonics to help retention."
+        ...,
+        description="A comprehensive list containing AT LEAST 10 highly distinct flashcards/mnemonics covering all sub-topics.",
     )
+
     similar_exam: Exam = Field(
         ...,
-        description="A follow-up mini-exam with new questions to test the concepts just taught.",
+        description="A follow-up diagnostic exam containing exactly 10 comprehensive, newly synthesized math/general questions.",
     )
     images: List[Image] = Field(
-        ...,
-        description="Images associated with the lesson. Remember to use the same name as the given data.",
+        ..., description="Images associated with the overall lesson."
     )
     saved: Optional[bool] = False
 
