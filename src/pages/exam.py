@@ -62,7 +62,6 @@ def render_questions():
             )
 
         def on_choice_click(button_id, choice, selected_question):
-            st.session_state.selected_buttons[selected_question.id] = button_id
 
             page_key = str(st.session_state.question_type)
             if st.session_state.choices.get(page_key) is None:
@@ -70,15 +69,30 @@ def render_questions():
                     page_key
                 ] = {}  # Change from List [] to Dict {}
 
+            # Removes any previous choice if the same button is clicked again
+            # print(choice)
+            if (
+                st.session_state.choices[page_key].get(
+                    selected_question.id, (None, None)
+                )[1]
+                == choice
+            ):
+                st.session_state.choices[page_key][selected_question.id] = (None, None)
+                st.session_state.selected_buttons[selected_question.id] = None
+                print(
+                    "remove answer",
+                )
+                return
+            st.session_state.selected_buttons[selected_question.id] = button_id
             # This overwrites any previous choice for this specific question ID
             st.session_state.choices[page_key][selected_question.id] = (
                 selected_question,
                 choice,
             )
-            print(
-                "save answer",
-                st.session_state.choices[str(st.session_state.question_type)],
-            )
+            # print(
+            #     "save answer",
+            #     st.session_state.choices[str(st.session_state.question_type)],
+            # )
 
         for i, choice in enumerate(question.choices):
             # st.session_state[f"button_{question.id}{choice.id.lower()}_value"] = st.session_state.get(f"button_{question.id}{choice.id.lower()}_value", 0)

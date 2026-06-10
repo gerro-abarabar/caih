@@ -75,7 +75,7 @@ def send_message(question_id, exam, chat_message_key, response_key):
                 - **Formatting:** Write in clean, beautiful Markdown for a chat interface. Use bolding for key terms, bullet points for steps/reasons, and clear spacing. Avoid outputting raw JSON or code structures.""",
             )
             st.session_state[response_key] = ai_response
-            st.session_state[chat_message_key] = ""  # Clear the input box after sending
+            # removed and relocated to line 112 area
             print("Message sent, AI response received:", ai_response)
         for key in st.session_state.keys():
             if "chat_response" in str(key):
@@ -105,7 +105,15 @@ def print_exam(exam: List[QuestionList], is_all=False):
                     # AI Message logic
                     if ai_stream:
                         print("AI stream found", ai_stream)
+                        # Copy the string
+                        message = st.session_state[f"chat_send_{question_id}"][:]
+                        st.session_state[f"chat_send_{question_id}"] = (
+                            ""  # Resets the text area
+                        )
                         if isinstance(ai_stream, str):
+                            st.markdown(
+                                f"{st.session_state.user_data['user']['name']}: {message}"
+                            )
                             st.markdown(f"**AI:** {ai_stream}")
 
                         else:
@@ -270,6 +278,7 @@ else:
 
         if CHOICES.get(str(i)) is None:
             continue
+        print(f"{CHOICES=}")
         for question, answer in CHOICES.get(
             str(i), []
         ).values():  # ( Question, Answer )

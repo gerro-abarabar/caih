@@ -6,6 +6,7 @@ from time import sleep
 from typing import List
 
 from ollama import Client
+from pandas._libs.lib import i8max
 
 from .exam_model import Exam, Question
 from .explanation_model import Lesson
@@ -42,7 +43,24 @@ def get_exam_from_ai(questions, subject):
     example_json = []
     image_list = []
     formatted_images = {}
-    for cut in cuts:
+    # for cut in cuts:
+    #     exam_json = load_exam(subject=subject)
+    #     start_number = randint(0, len(exam_json) - cut - 1)
+    #     exam = exam_json[start_number : start_number + cut]
+    #     if any("images" in question for question in exam):
+    #         for question in exam:
+    #             if question.get("images", []):
+    #                 images = question.get("images")
+    #                 question["images"] = list(images.keys())
+    #                 image_list.append(*images.values())
+    #                 formatted_images.update(images)
+    #                 print(type(question.get("images")))
+    #     example_json.append(exam)
+    print(cuts)
+    # For question that always have pictures
+    i = 0
+    while i < len(cuts):
+        cut = cuts[i]
         exam_json = load_exam(subject=subject)
         start_number = randint(0, len(exam_json) - cut - 1)
         exam = exam_json[start_number : start_number + cut]
@@ -54,8 +72,11 @@ def get_exam_from_ai(questions, subject):
                     image_list.append(*images.values())
                     formatted_images.update(images)
                     print(type(question.get("images")))
+            print("Found a cut with images")
+            i += 1
+        else:
+            continue  # Stops if it doesnt have images in the cut
         example_json.append(exam)
-    print(cuts)
 
     # Double braces safely escape unexpanded brackets for python f-strings
     formatted_example = json.dumps(example_json).replace("{", "{{").replace("}", "}}")
@@ -73,18 +94,19 @@ def get_exam_from_ai(questions, subject):
         {
             "role": "user",
             "content": (
-                f"Generate an 'Exam' object containing {questions} new questions. "
-                f"\n\n### SCHEMA CONSTRAINTS:\n{Exam.model_json_schema()}"
-                f"\n\n### REFERENCE EXAMPLE:\n{formatted_example}"
-                "\n\n### STRICT RULES:"
-                "\n1. The 'id' must start at 1 and increment sequentially."
-                "\n2. 'correct_answer' must be the choice id of the correct answer."
-                "\n3. Map descriptions to the provided images accurately."
-                "\n4. Return ONLY the raw JSON."
-                "\n5. Put the data of the image in the 'images' key where it was referenced."
-                "\n6. You may not create any new image. Only use the provided ones and use the same name used in the question."
-                "\n7. You must use the same name for the image used in the question, you may not use the image data itself."
-                "\n8. Strictly, do not use emojis, no matter how important it is."
+                f"Generate an 'Exam' object containing {questions} new questions.\n\n"
+                f"### SCHEMA CONSTRAINTS:\n{Exam.model_json_schema()}\n\n"
+                f"### REFERENCE EXAMPLE:\n{formatted_example}\n\n"
+                "### STRICT RULES FOR THE 'Image' OBJECTS:\n"
+                "1. The 'name' key MUST exactly match the literal filename string of one of the images provided in your context (e.g., 'graph_1.png'). Do not invent new names.\n"
+                "2. The 'description' key must be a very brief, 1-sentence summary of what the image is used for (e.g., 'Velocity-time graphs for question 1'). Do not write long textual transcriptions or multi-sentence options here.\n"
+                "3. The 'data' key MUST always be set to null. Never attempt to generate base64 data or raw bytes.\n\n"
+                "### GENERAL RULES:\n"
+                "1. The 'id' must start at 1 and increment sequentially.\n"
+                "2. 'correct_answer' must be the choice id of the correct answer.\n"
+                "3. Return ONLY the raw JSON.\n"
+                "4. You may not create any new image. Only use the provided ones and use the same name used in the question.\n"
+                "5. Strictly, do not use emojis, no matter how important it is."
             ),
             "images": image_list,
         },
