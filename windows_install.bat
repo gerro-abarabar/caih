@@ -11,7 +11,7 @@ echo [+] Checking for a REAL Python installation...
 :: Check if python runs and returns a valid version string
 python --version >nul 2>&1
 if %errorlevel% neq 0 (
-    echo [!] Real Python not found (or caught the Microsoft Store alias).
+    echo [!] Real Python not found (or caught the Microsoft Store alias)
     echo [+] Installing Python 3.12 via WinGet...
     winget install Python.Python.3.12 --silent --accept-source-agreements --accept-package-agreements
 
@@ -26,7 +26,7 @@ where ollama >nul 2>nul
 if %errorlevel% neq 0 (
     winget install Ollama.Ollama --silent --accept-source-agreements --accept-package-agreements
     echo [+] Launching Ollama background service...
-    ollama serve
+    startd "" "ollama serve"
     timeout /t 5 >nul
 ) else (
     echo [✓] Ollama is already installed.

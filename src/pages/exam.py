@@ -2,6 +2,7 @@ import time
 from datetime import datetime
 
 import streamlit as st
+from streamlit_scroll_to_top import scroll_to_here
 
 
 @st.cache_resource
@@ -106,10 +107,12 @@ if st.session_state.question_type < len(exam.types):
 
 # Define the callback functions
 def next_page():
+    scroll_to_here(delay=0, key="top_anchor")
     st.session_state.question_type += 1
 
 
 def go_back():
+    scroll_to_here(delay=0, key="top_anchor")
     if st.session_state.question_type > 0:
         st.session_state.question_type -= 1
 
