@@ -17,6 +17,9 @@ This project needs to be able to do the following:
 - [ ] A server for hosting public reviewers
 - [ ] Global chat in the server for asking questions and sharing reviewers
 - [x] Open up saved exams
+- [ ] Make it faster by implementing a new way to make exams
+  - Make AI to create the skeleton (no explanation exam)
+  - Make AI run in the background to finish adding explanations
 
 # Contribute (for students)
 
