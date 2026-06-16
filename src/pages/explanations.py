@@ -171,14 +171,15 @@ def print_exam(exam: List[QuestionList], is_all=False):
                 st.write(
                     f"Correct answer: {question.get_choice(question.correct_answer).choice}"  # pyright: ignore[reportOptionalMemberAccess]
                 )
-                st.write(
-                    "---"
-                    + "\n\n"
-                    + lower_headings(question.explanation, 1)
-                    + "\n\n"
-                    + "---",
-                    unsafe_allow_html=True,
-                )
+                explanation_container = st.container(horizontal_alignment="center")
+                with explanation_container:
+                    st.write("---")
+                    st.markdown("### Explanation")
+                    st.markdown(
+                        lower_headings(question.explanation, 1),
+                        unsafe_allow_html=True,
+                    )
+                    st.write("---")
                 col1, col2 = st.columns(2)
                 with col1:  # Ask for better explanation
                     with st.container(
@@ -191,21 +192,24 @@ def print_exam(exam: List[QuestionList], is_all=False):
                             print(question.explanation)
                             st.session_state.asked_better_explanation = True
                             with st.spinner("Making better explanation..."):
+                                explanation_container.empty()  # Clear the previous explanation
                                 container = st.empty()
                                 # TODO: Fix it by using stream
                                 response = st.session_state.data.remake_explanation(
                                     question
                                 )
+                                full_message = ""
                                 for chunk in response:
                                     if chunk.message.thinking:  # Prints out the "AI is thinking..." message only once per question, and not for every chunk
                                         container.info("AI is thinking...")
 
                                     if chunk.message.content:
+                                        full_message += chunk.message.content
                                         container.markdown(
-                                            chunk.message.content,
+                                            full_message,
                                             unsafe_allow_html=True,
                                         )
-
+                                question.explanation = full_message
                                 st.rerun()
 
                 with col2:  # Ask chat for help
