@@ -20,6 +20,9 @@ This project needs to be able to do the following:
 - [ ] Make it faster by implementing a new way to make exams
   - Make AI to create the skeleton (no explanation exam)
   - Make AI run in the background to finish adding explanations
+- [ ] Add ability to use local models
+- [ ] Add more home buttons
+- [ ] Use logging to make it easier to find bugs
 
 # Contribute (for students)
 
@@ -57,7 +60,7 @@ Install the required libraries by doing `pip install -r requirements.txt` or `pi
 
 Install the notable language models by doing the commands:
 
-- `ollama pull deepseek-v3.2:cloud`
+- `ollama pull gemma4:31b-cloud`
 - `ollama pull qwen3.5:397b-cloud`
 - `ollama pull ministral-3:14b-cloud`
 
