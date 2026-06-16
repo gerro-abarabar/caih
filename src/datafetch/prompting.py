@@ -112,7 +112,8 @@ def get_exam_from_ai(questions, subject):
                 "1. The 'id' must start at 1 and increment sequentially.\n"
                 "2. 'correct_answer' must be the choice id of the correct answer.\n"
                 "3. Return ONLY the raw JSON.\n"
-                "4. Strictly, do not use emojis."
+                "4. Strictly, do not use emojis.\n"
+                "5. Make sure that you use the format given to you. Not the example."
             ),
             "images": image_list,
         },

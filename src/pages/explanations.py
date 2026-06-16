@@ -191,10 +191,21 @@ def print_exam(exam: List[QuestionList], is_all=False):
                             print(question.explanation)
                             st.session_state.asked_better_explanation = True
                             with st.spinner("Making better explanation..."):
+                                container = st.empty()
                                 # TODO: Fix it by using stream
                                 response = st.session_state.data.remake_explanation(
                                     question
                                 )
+                                for chunk in response:
+                                    if chunk.message.thinking:  # Prints out the "AI is thinking..." message only once per question, and not for every chunk
+                                        container.info("AI is thinking...")
+
+                                    if chunk.message.content:
+                                        container.markdown(
+                                            chunk.message.content,
+                                            unsafe_allow_html=True,
+                                        )
+
                                 st.rerun()
 
                 with col2:  # Ask chat for help

@@ -4,6 +4,10 @@ from datetime import datetime
 import streamlit as st
 from streamlit_scroll_to_top import scroll_to_here
 
+if st.session_state.should_scroll:
+    scroll_to_here(delay=0, key="top_anchor")
+    # st.session_state.should_scroll = False
+
 
 @st.cache_resource
 def get_exam(amount, subject, _data_fetcher):
@@ -141,14 +145,20 @@ if st.session_state.question_type < len(exam.types):
 # --- NAVIGATION LOGIC ---
 
 
+def trigger_scroll():
+    st.session_state.should_scroll = True
+
+
 # Define the callback functions
 def next_page():
-    scroll_to_here(delay=0, key="top_anchor")
+    trigger_scroll()  # Set the flag to trigger scrolling on the next rerun
+
     st.session_state.question_type += 1
 
 
 def go_back():
-    scroll_to_here(delay=0, key="top_anchor")
+    trigger_scroll()  # Set the flag to trigger scrolling on the next rerun
+
     if st.session_state.question_type > 0:
         st.session_state.question_type -= 1
 
@@ -207,6 +217,8 @@ st.markdown(
 )
 
 # Instead of just st.rerun()
-if not timer.ended:
+if (
+    not timer.ended and not st.session_state.should_scroll
+):  # Would stop rerunning if the user is scrolling to top
     time.sleep(0.1)  # Prevents the script from pegged CPU usage
     st.rerun()
