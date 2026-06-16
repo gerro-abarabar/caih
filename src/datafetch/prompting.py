@@ -43,24 +43,7 @@ def get_exam_from_ai(questions, subject):
     example_json = []
     image_list = []
     formatted_images = {}
-    # for cut in cuts:
-    #     exam_json = load_exam(subject=subject)
-    #     start_number = randint(0, len(exam_json) - cut - 1)
-    #     exam = exam_json[start_number : start_number + cut]
-    #     if any("images" in question for question in exam):
-    #         for question in exam:
-    #             if question.get("images", []):
-    #                 images = question.get("images")
-    #                 question["images"] = list(images.keys())
-    #                 image_list.append(*images.values())
-    #                 formatted_images.update(images)
-    #                 print(type(question.get("images")))
-    #     example_json.append(exam)
-    print(cuts)
-    # For question that always have pictures
-    i = 0
-    while i < len(cuts):
-        cut = cuts[i]
+    for cut in cuts:
         exam_json = load_exam(subject=subject)
         start_number = randint(0, len(exam_json) - cut - 1)
         exam = exam_json[start_number : start_number + cut]
@@ -72,12 +55,29 @@ def get_exam_from_ai(questions, subject):
                     image_list.append(*images.values())
                     formatted_images.update(images)
                     print(type(question.get("images")))
-            print("Found a cut with images")
-            i += 1
-        else:
-            # print("No Image")
-            continue  # Stops if it doesnt have images in the cut
         example_json.append(exam)
+    print(cuts)
+    # For question that always have pictures
+    i = 0
+    # while i < len(cuts):
+    #     cut = cuts[i]
+    #     exam_json = load_exam(subject=subject)
+    #     start_number = randint(0, len(exam_json) - cut - 1)
+    #     exam = exam_json[start_number : start_number + cut]
+    #     if any("images" in question for question in exam):
+    #         for question in exam:
+    #             if question.get("images", []):
+    #                 images = question.get("images")
+    #                 question["images"] = list(images.keys())
+    #                 image_list.append(*images.values())
+    #                 formatted_images.update(images)
+    #                 print(type(question.get("images")))
+    #         print("Found a cut with images")
+    #         i += 1
+    #     else:
+    #         # print("No Image")
+    #         continue  # Stops if it doesnt have images in the cut
+    #     example_json.append(exam)
 
     # Double braces safely escape unexpanded brackets for python f-strings
     formatted_example = json.dumps(example_json).replace("{", "{{").replace("}", "}}")
