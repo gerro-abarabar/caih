@@ -62,7 +62,7 @@ def render_questions():
             )
             if not image_in_question:
                 for image in question.images:
-                    base64_str = str(image.data).strip()
+                    base64_str = str(image.data.decode("utf-8")).strip()
                     # TODO: Make this work in mathematics.json
                     # Determine the correct MIME type based on the starting characters
                     if base64_str.startswith("/9j/"):
