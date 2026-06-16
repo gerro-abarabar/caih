@@ -140,6 +140,9 @@ def get_exam_from_ai(questions, subject):
             final_exam.add_images(formatted_images)
             final_exam.subject_folder = subject.lower()
             print(f"\nSuccessfully generated {len(final_exam.types)} question types.")
+
+            assert sum(len(type.questions) for type in final_exam.types) >= questions
+
         except Exception as e:
             print(f"\nError in generating exam: {e}. Retrying...")
             final_exam = None

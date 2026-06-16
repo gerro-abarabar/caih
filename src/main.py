@@ -14,11 +14,8 @@ from utils.ver_checker import get_latest_version
 st.set_page_config(page_title="Exam Generator")
 SUBJECTS = [
     subject.capitalize()
-    for subject in [
-        subject
-        for subject in os.listdir("assets")
-        if os.path.isdir(os.path.join("assets", subject))
-    ]
+    for subject in os.listdir("assets")
+    if os.path.isdir(os.path.join("assets", subject))
 ]
 
 st.title("CAIH")
