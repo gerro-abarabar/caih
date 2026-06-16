@@ -98,6 +98,7 @@ def print_exam(exam: List[QuestionList], is_all=False):
                     st.markdown(f"### Question {question_id}")
 
                     response_key = f"chat_response_{question_id}"
+                    chat_input_key = f"chat_input_{question_id}"
                     print(f"{response_key=}")
 
                     ai_stream = st.session_state.get(response_key, False)
@@ -106,10 +107,11 @@ def print_exam(exam: List[QuestionList], is_all=False):
                     if ai_stream:
                         print("AI stream found", ai_stream)
                         # Copy the string
-                        message = st.session_state[f"chat_send_{question_id}"][:]
-                        st.session_state[f"chat_send_{question_id}"] = (
-                            ""  # Resets the text area
-                        )
+                        message = st.session_state.get(chat_input_key, "")[:]
+                        print(message)
+                        # st.session_state[f"chat_input_{question_id}"] = (
+                        #     ""  # Resets the text area
+                        # )
                         if isinstance(ai_stream, str):
                             st.markdown(
                                 f"{st.session_state.user_data['user']['name']}: {message}"
@@ -127,6 +129,7 @@ def print_exam(exam: List[QuestionList], is_all=False):
 
                                 if chunk.message.content:
                                     status_container.empty()
+
                                     full_message += chunk.message.content
                                     message_container.markdown(full_message + "▌")
                             message_container.markdown(full_message)
@@ -134,7 +137,7 @@ def print_exam(exam: List[QuestionList], is_all=False):
                                 full_message  # Saves the full message so it doesn't disappear when the component rerenders
                             )
                             st.rerun()
-                    chat_input_key = f"chat_input_{question_id}"
+
                     st.text_area(
                         "Your question to the AI",
                         key=chat_input_key,
@@ -188,8 +191,9 @@ def print_exam(exam: List[QuestionList], is_all=False):
                             print(question.explanation)
                             st.session_state.asked_better_explanation = True
                             with st.spinner("Making better explanation..."):
-                                question.explanation = (
-                                    st.session_state.data.remake_explanation(question)
+                                # TODO: Fix it by using stream
+                                response = st.session_state.data.remake_explanation(
+                                    question
                                 )
                                 st.rerun()
 

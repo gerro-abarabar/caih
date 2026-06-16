@@ -75,6 +75,7 @@ def get_exam_from_ai(questions, subject):
             print("Found a cut with images")
             i += 1
         else:
+            # print("No Image")
             continue  # Stops if it doesnt have images in the cut
         example_json.append(exam)
 
@@ -94,19 +95,24 @@ def get_exam_from_ai(questions, subject):
         {
             "role": "user",
             "content": (
-                f"Generate an 'Exam' object containing {questions} new questions.\n\n"
+                f"Generate an 'Exam' object containing {questions} brand new, unique questions.\n\n"
                 f"### SCHEMA CONSTRAINTS:\n{Exam.model_json_schema()}\n\n"
-                f"### REFERENCE EXAMPLE:\n{formatted_example}\n\n"
-                "### STRICT RULES FOR THE 'Image' OBJECTS:\n"
-                "1. The 'name' key MUST exactly match the literal filename string of one of the images provided in your context (e.g., 'graph_1.png'). Do not invent new names.\n"
-                "2. The 'description' key must be a very brief, 1-sentence summary of what the image is used for (e.g., 'Velocity-time graphs for question 1'). Do not write long textual transcriptions or multi-sentence options here.\n"
-                "3. The 'data' key MUST always be set to null. Never attempt to generate base64 data or raw bytes.\n\n"
-                "### GENERAL RULES:\n"
+                # CHANGED: Rephrased this heading so the AI treats it as a blacklist
+                f"### EXCLUDED QUESTIONS (DO NOT REPEAT THESE):\n{formatted_example}\n\n"
+                "### UNIQUENESS CONSTRAINTS:\n"
+                "1. FOR TEXT-ONLY QUESTIONS: You must generate completely original scenarios, numbers, and variables from scratch. Do not copy or slightly alter the EXCLUDED QUESTIONS.\n"
+                "2. FOR IMAGE-DEPENDENT QUESTIONS: If a question reuses an image from the pool, you MUST keep the core setup identical so it perfectly matches what the image displays (e.g., if 'graph_1.png' shows a constant velocity of 5 m/s, the question must reflect that). However, you MUST change the values being asked for, rearrange the multiple-choice distractors, or alter the final computational target to ensure it is still a brand new problem.\n"
+                "3. CORE IDENTITY: While changing the numbers or computational goals, ensure the new questions still test the exact same conceptual difficulty as the examples.\n\n"
+                f"### STRICT RULES FOR THE 'Image' OBJECTS:\n"
+                "1. REUSE CONSTRAINT: You cannot create new images. If a new question requires an image, you must reuse an existing image name from the provided pool.\n"
+                "2. The 'name' key MUST exactly match the literal filename string of the reused image (e.g., 'graph_1.png').\n"
+                "3. The 'description' key must be a very brief, 1-sentence summary of what the image represents.\n"
+                "4. The 'data' key MUST always be set to null.\n\n"
+                f"### GENERAL RULES:\n"
                 "1. The 'id' must start at 1 and increment sequentially.\n"
                 "2. 'correct_answer' must be the choice id of the correct answer.\n"
                 "3. Return ONLY the raw JSON.\n"
-                "4. You may not create any new image. Only use the provided ones and use the same name used in the question.\n"
-                "5. Strictly, do not use emojis, no matter how important it is."
+                "4. Strictly, do not use emojis."
             ),
             "images": image_list,
         },
@@ -130,6 +136,7 @@ def get_exam_from_ai(questions, subject):
 
             # Pydantic native validation parses pristine escaped JSON structures perfectly
             final_exam = Exam.model_validate_json(final_response)
+            print(formatted_images)
             final_exam.add_images(formatted_images)
             final_exam.subject_folder = subject.lower()
             print(f"\nSuccessfully generated {len(final_exam.types)} question types.")
@@ -254,10 +261,10 @@ def remake_explanation(question: Question):
     response = client.chat(
         MODEL,
         messages=messages,
-        stream=False,
+        stream=True,
         options={"temperature": 0.2},
     )
-    return response.message.content
+    return response
 
 
 def chat_with_ai(messages: List[dict]):

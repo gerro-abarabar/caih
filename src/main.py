@@ -29,6 +29,12 @@ st.session_state.user_data = (
     user_data  # Store in session state for easy access across pages
 )
 latest_version = get_latest_version()
+if st.session_state.get("chat_opened", None):
+    st.session_state["chat_opened"] = False
+
+if st.session_state.get("opened_chats", None):
+    st.session_state["opened_chats"] = {}
+
 current_version = user_data.get("version", "0.0.0")
 if latest_version != current_version:
     st.warning(

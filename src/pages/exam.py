@@ -49,13 +49,35 @@ def render_questions():
     st.write("## " + exam_dict_key)
     for question in current_page_type.questions:
         if len(question.images) != 0:
+            image_in_question = False
             for image in question.images:
-                question.question = question.question.replace(
-                    image.name, f"data:image/png;base64,{image.data}"
-                )
+                if image.name in question.question:
+                    question.question = question.question.replace(
+                        image.name, f"data:image/png;base64,{image.data}"
+                    )
+                    image_in_question = True
             st.markdown(
                 f"#### {question.id}.  {question.question}", unsafe_allow_html=True
             )
+            if not image_in_question:
+                for image in question.images:
+                    base64_str = str(image.data).strip()
+                    # TODO: Make this work in mathematics.json
+                    # Determine the correct MIME type based on the starting characters
+                    if base64_str.startswith("/9j/"):
+                        mime_type = "image/jpeg"
+                    elif base64_str.startswith("iVBORw0KGg"):
+                        mime_type = "image/png"
+                    elif base64_str.startswith("R0lGOD"):
+                        mime_type = "image/gif"
+                    else:
+                        mime_type = "image/png"  # Default fallback
+
+                    data_url = f"data:{mime_type};base64,{base64_str}"
+
+                    st.image(
+                        data_url, caption=image.description, use_container_width=True
+                    )
         else:
             st.markdown(
                 f"#### {question.id}.  {question.question}", unsafe_allow_html=True
