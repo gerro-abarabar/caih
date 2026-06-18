@@ -23,7 +23,7 @@ else
 fi
 
 echo "[+] Verifying Cloud Account Status..."
-if ! python3 check_auth.py; then
+if ! python3 src/check_ollama.py; then
     echo ""
     echo "[!] ALERT: An Ollama account is REQUIRED to execute Cloud Models."
     echo "[!] Opening your default browser... please sign in or register."
@@ -37,7 +37,16 @@ echo "[+] Downloading the Gemma 4 Cloud model..."
 ollama pull gemma4:31b-cloud
 
 echo "[+] Installing Python libraries..."
-pip3 install -r requirements.txt --break-system-packages
+python3 -m venv .venv
+if [[ "$SHELL" == *"fish"* ]]; then
+    source .venv/bin/activate.fish
+elif [[ "$SHELL" == *"csh"* ]]; then
+    source .venv/bin/activate.csh
+else
+    source .venv/bin/activate
+fi
+
+pip3 install -r requirements.txt
 
 echo "[+] Setup complete! Launching CAIH..."
 python3 -m streamlit run src/main.py
