@@ -6,7 +6,7 @@ from typing import Any, Dict
 import streamlit as st
 
 DEFAULT_DATA: Dict[str, Any] = {
-    "version": "v1.3",
+    "version": "v1.3.1",
     "user": {
         "name": "John Doe",
         "username": "johndoe",
